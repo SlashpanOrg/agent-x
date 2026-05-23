@@ -103,6 +103,19 @@ clean_existing() {
     ok "Removed old binary at $BIN_DIR/agentx"
   fi
 
+  # Clear cache and logs (stale data from previous versions)
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/agentx"
+  if [ -d "$cache_dir" ]; then
+    rm -rf "$cache_dir"
+    ok "Cleared cache"
+  fi
+
+  local data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/agentx"
+  if [ -d "$data_dir/logs" ]; then
+    rm -rf "$data_dir/logs"
+    ok "Cleared old logs"
+  fi
+
   # Clean global npm/pnpm installs of agentx if present
   if check_command agentx; then
     local existing_path
