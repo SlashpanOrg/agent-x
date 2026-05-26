@@ -217,15 +217,6 @@
       border-color: #fff;
       opacity: 1;
     }
-    #ghStars {
-      color: #ccc;
-      font-weight: 600;
-    }
-    #ghStars:not(:empty)::before {
-      content: '\2605 ';
-      color: #fff;
-    }
-    #ghStars:empty { display: none; }
     .gh-announce {
       text-align: center;
       margin-top: 32px;
@@ -234,24 +225,28 @@
     .gh-announce-inner {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      border: 1px solid #1a1a1a;
+      gap: 8px;
       padding: 10px 24px;
-      border-radius: 6px;
+      border-radius: 8px;
+      border: 1px solid #333;
     }
-    .gh-announce .star-icon {
-      font-size: 1rem;
-      color: #555;
+    .gh-announce .count-current {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
     }
-    .gh-announce .msg {
-      font-size: 0.78rem;
-      color: #666;
-      letter-spacing: 1px;
+    .gh-announce .count-sep {
+      color: #888;
+      font-size: 0.9rem;
     }
     .gh-announce .count-target {
       color: #fff;
-      font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+    }
+    .gh-announce .msg {
+      font-size: 0.8rem;
+      color: #fff;
+      letter-spacing: 0.5px;
     }
     .hero-scroll {
       position: absolute;
@@ -1037,16 +1032,16 @@
         <span>&#x2193;</span> Install Now
       </a>
       <a href="https://github.com/SlashpanOrg/agent-x" target="_blank" rel="noopener" class="btn btn-secondary" id="githubBtn">
-        GitHub <span id="ghStars"></span> &nearr;
+        Star on GitHub
       </a>
     </div>
 
     <div class="gh-announce reveal reveal-delay-5">
       <div class="gh-announce-inner">
-        <span class="star-icon">&#x2605;</span>
-        <span class="msg">Source code unlocks at</span>
-        <span class="count-target">1,00,000</span>
-        <span class="msg">GitHub stars</span>
+        <span class="count-current" id="ghCurrent">0</span>
+        <span class="count-sep">/</span>
+        <span class="count-target">1,000,000</span>
+        <span class="msg">GitHub stars to unlock source code</span>
       </div>
     </div>
 
@@ -1656,7 +1651,7 @@
         .then(r => r.json())
         .then(d => {
           if (d.stargazers_count !== undefined) {
-            document.getElementById('ghStars').textContent = d.stargazers_count.toLocaleString('en-IN');
+            document.getElementById('ghCurrent').textContent = d.stargazers_count.toLocaleString('en-IN');
           }
         })
         .catch(() => {});
