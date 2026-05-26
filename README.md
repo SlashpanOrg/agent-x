@@ -30,7 +30,7 @@ curl -fsSL https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.sh
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.ps1 | iex
+powershell -c "irm https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.ps1 | iex"
 ```
 
 **Requirements:** Node.js >= 20 (the only prerequisite). The installer handles everything else.
@@ -193,12 +193,6 @@ Agent-X is built on three principles:
 2. **Local-first** — Your data stays on your machine. Sessions, memories, and configuration never leave your system. Nothing phones home.
 
 3. **Provider-agnostic** — No lock-in. Swap between cloud and local models at will. The same tools and workflows work regardless of the AI backend.
-
----
-
-## License
-
-MIT
 
 ---
 
