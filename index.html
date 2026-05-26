@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGENT-X — Your AI Wingman</title>
+  <meta name="description" content="AGENT-X is an open-source AI agent with 90+ tools, 5 providers, Telegram bridge, cron scheduler, and persistent memory. Made in India." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: #fff; text-decoration: none; transition: opacity .2s; }
+    a:hover { opacity: .7; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: #fff; color: #000; }
+
+    /* ===== Starfield Canvas ===== */
+    #starfield {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ===== Scan line overlay ===== */
+    #scanlines {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+      );
+    }
+
+    /* ===== Grid overlay ===== */
+    #grid-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ===== Utility ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .section-sub {
+      font-size: 1.1rem;
+      color: #888;
+      max-width: 640px;
+      line-height: 1.7;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    /* ===== Made in India Badge ===== */
+    .badge-india {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      border: 1px solid #333;
+      padding: 6px 14px;
+      border-radius: 4px;
+    }
+    .badge-india .flag {
+      font-size: 1rem;
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+    }
+    .hero-badge {
+      margin-bottom: 32px;
+    }
+    .hero-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 700;
+      letter-spacing: 8px;
+      line-height: 1;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+    .hero-logo .dash {
+      color: #555;
+    }
+    .hero-tagline {
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      font-weight: 300;
+      color: #aaa;
+      margin-bottom: 32px;
+      letter-spacing: 1px;
+    }
+    .hero-typewriter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      color: #666;
+      min-height: 1.8em;
+      margin-bottom: 48px;
+    }
+    .hero-typewriter .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #fff;
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .25s ease;
+      border: none;
+    }
+    .btn-primary {
+      background: #fff;
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #ccc;
+      opacity: 1;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #444;
+    }
+    .btn-secondary:hover {
+      border-color: #fff;
+      opacity: 1;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #444;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: float 2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, #555, transparent);
+    }
+
+    /* ===== Wingman Difference ===== */
+    #wingman {
+      border-top: 1px solid #1a1a1a;
+    }
+    .wingman-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 48px;
+    }
+    .wingman-col h3 {
+      font-size: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 24px;
+    }
+    .wingman-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid #111;
+    }
+    .wingman-item:last-child { border-bottom: none; }
+    .wingman-icon {
+      font-family: 'JetBrains Mono', monospace;
+      color: #444;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      width: 24px;
+      text-align: center;
+    }
+    .wingman-label {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .wingman-desc {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    /* ===== Capabilities ===== */
+    #capabilities {
+      border-top: 1px solid #1a1a1a;
+    }
+    .caps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+      background: #111;
+    }
+    .cap-card {
+      background: #000;
+      padding: 40px 32px;
+      position: relative;
+      transition: background .3s ease;
+    }
+    .cap-card:hover {
+      background: #0a0a0a;
+    }
+    .cap-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #444;
+      margin-bottom: 16px;
+    }
+    .cap-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .cap-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .cap-card p {
+      color: #777;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .cap-card .cap-highlight {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #888;
+      border: 1px solid #333;
+      padding: 2px 10px;
+      border-radius: 3px;
+      margin-top: 16px;
+    }
+
+    /* ===== Secret Sauce ===== */
+    #secret-sauce {
+      border-top: 1px solid #1a1a1a;
+    }
+    .sauce-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .sauce-card {
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color .3s ease;
+    }
+    .sauce-card:hover {
+      border-color: #333;
+    }
+    .sauce-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sauce-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #333;
+    }
+    .sauce-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .sauce-body {
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      line-height: 1.8;
+      color: #666;
+      min-height: 180px;
+    }
+    .sauce-body .highlight {
+      color: #aaa;
+    }
+    .sauce-body .comment {
+      color: #444;
+    }
+    .sauce-body .key {
+      color: #fff;
+    }
+
+    /* ===== Install ===== */
+    #install {
+      border-top: 1px solid #1a1a1a;
+    }
+    .install-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 48px;
+    }
+    .terminal {
+      background: #0a0a0a;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .terminal-dot.red { background: #333; }
+    .terminal-dot.yellow { background: #444; }
+    .terminal-dot.green { background: #555; }
+    .terminal-title {
+      font-size: 0.75rem;
+      color: #555;
+      margin-left: 8px;
+    }
+    .terminal-body {
+      padding: 20px 24px;
+      font-size: 0.85rem;
+      line-height: 2;
+      color: #888;
+    }
+    .terminal-body .prompt {
+      color: #444;
+    }
+    .terminal-body .cmd {
+      color: #fff;
+    }
+    .terminal-body .output {
+      color: #666;
+    }
+    .terminal-body .success {
+      color: #999;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 1.2em;
+      background: #fff;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+    }
+    .install-info h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .install-info p {
+      color: #888;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .install-info .small {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    /* ===== Stats ===== */
+    #stats {
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 60px 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+      background: #111;
+    }
+    .stat-item {
+      background: #000;
+      text-align: center;
+      padding: 32px 16px;
+    }
+    .stat-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      padding: 48px 0;
+      text-align: center;
+    }
+    footer .brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      color: #555;
+      margin-bottom: 16px;
+    }
+    footer .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    footer .links a {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    footer .links a:hover {
+      color: #fff;
+    }
+    footer .copyright {
+      font-size: 0.8rem;
+      color: #444;
+    }
+    footer .copyright .heart {
+      color: #666;
+    }
+
+    /* ===== OS Tabs ===== */
+    .os-tabs {
+      display: flex;
+      border-bottom: 1px solid #1a1a1a;
+      background: #080808;
+    }
+    .os-tab {
+      flex: 1;
+      padding: 10px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      transition: all .2s ease;
+    }
+    .os-tab:hover {
+      color: #888;
+    }
+    .os-tab.active {
+      color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    /* ===== Orbit animation for cap cards ===== */
+    .cap-orbit {
+      position: relative;
+    }
+    .cap-orbit::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: 1px solid #222;
+      border-radius: 50%;
+    }
+    .cap-orbit::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: 34px;
+      width: 4px;
+      height: 4px;
+      background: #555;
+      border-radius: 50%;
+      animation: orbit 4s linear infinite;
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(20px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 968px) {
+      .caps-grid { grid-template-columns: repeat(2, 1fr); }
+      .sauce-grid { grid-template-columns: 1fr; }
+      .wingman-grid { grid-template-columns: 1fr; gap: 40px; }
+      .install-layout { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .section { padding: 60px 0; }
+      .caps-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-logo { letter-spacing: 4px; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Canvas Starfield ===== -->
+  <canvas id="starfield"></canvas>
+  <div id="grid-overlay"></div>
+  <div id="scanlines"></div>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-badge reveal">
+      <span class="badge-india">
+        <span class="flag">&#x1F1EE;&#x1F1F3;</span>
+        Made in India
+      </span>
+    </div>
+
+    <div class="hero-logo reveal reveal-delay-1">
+      AGENT<span class="dash">-</span>X
+    </div>
+
+    <p class="hero-tagline reveal reveal-delay-2">
+      Your AI Wingman
+    </p>
+
+    <div class="hero-typewriter reveal reveal-delay-3">
+      <span id="typewriter-text">Plotting trajectory...</span>
+      <span class="cursor"></span>
+    </div>
+
+    <div class="hero-actions reveal reveal-delay-4">
+      <a href="#install" class="btn btn-primary">
+        <span>&#x2193;</span> Install Now
+      </a>
+      <a href="https://github.com/SlashpanOrg/agent-x" target="_blank" rel="noopener" class="btn btn-secondary">
+        GitHub &nearr;
+      </a>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===== Install (right after hero) ===== -->
+  <section class="section" id="install" style="padding:80px 0 100px;border-top:1px solid #1a1a1a;">
+    <div class="container">
+      <div class="section-label reveal">Get Started</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Launch in 10 seconds.
+      </h2>
+
+      <div class="install-layout">
+        <div class="terminal reveal">
+          <div class="terminal-bar">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">agentx — mission control</span>
+          </div>
+          <div class="os-tabs" id="osTabs">
+            <button class="os-tab active" data-os="macos" onclick="switchOS('macos')">macOS</button>
+            <button class="os-tab" data-os="linux" onclick="switchOS('linux')">Linux</button>
+            <button class="os-tab" data-os="windows" onclick="switchOS('windows')">Windows</button>
+          </div>
+          <div class="terminal-body" id="terminalBody">
+            <span class="prompt" id="termPrompt">$</span> <span class="cmd" id="termCmd">curl -fsSL https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.sh | bash</span><br />
+            <span class="output">&#x25B6; Running pre-flight diagnostics...</span><br />
+            <span class="output">&#x25B6; Downloading payload from orbit...</span><br />
+            <span class="output">&#x25B6; Calibrating neural pathways...</span><br />
+            <span class="success">&#x2713; Agent-X v0.1.47 installed</span><br />
+            <br />
+            <span class="prompt">$</span> <span class="cmd">agentx</span><br />
+            <span class="success">&#x25B6; Launching Mission Control...</span><span class="cursor-blink"></span>
+          </div>
+        </div>
+
+        <div class="install-info reveal reveal-delay-1">
+          <h3>One command. Zero config.</h3>
+          <p>
+            AGENT-X is a single binary. No Docker required (though we have one). No cloud account. No data leaving your machine unless you want it to.
+          </p>
+          <p>
+            Works on macOS and Linux natively. Windows via PowerShell. Compatible with all major LLM providers — or none at all if you run local models.
+          </p>
+          <p class="small">
+            <span style="color:#888;">Detected your system as</span> <span id="detectedOS" style="font-family:'JetBrains Mono',monospace;color:#fff;text-transform:uppercase;">macOS</span><br />
+            Already have it? Run <code style="font-family:'JetBrains Mono',monospace;color:#888;">agentx update</code> to get the latest.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats Bar ===== -->
+  <section id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal"><div class="stat-number">90+</div><div class="stat-label">Tools</div></div>
+        <div class="stat-item reveal reveal-delay-1"><div class="stat-number">5</div><div class="stat-label">Providers</div></div>
+        <div class="stat-item reveal reveal-delay-2"><div class="stat-number">14</div><div class="stat-label">Commands</div></div>
+        <div class="stat-item reveal reveal-delay-3"><div class="stat-number">100%</div><div class="stat-label">Open Source</div></div>
+        <div class="stat-item reveal reveal-delay-4"><div class="stat-number ">0</div><div class="stat-label">Vendor Lock-in</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Wingman Difference ===== -->
+  <section class="section" id="wingman">
+    <div class="container">
+      <div class="section-label reveal">The Difference</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Not a copilot.<br />A wingman.
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        Copilots only help in one app. A wingman covers every front — terminal, Telegram, local, cloud, memory, automation. AGENT-X is the first personal AI that actually has your back.
+      </p>
+
+      <div class="wingman-grid">
+        <div class="wingman-col">
+          <h3 class="reveal reveal-delay-3">Everyone Else</h3>
+          <div class="wingman-item reveal"><div class="wingman-icon">&#x2717;</div><div><div class="wingman-label">Single-provider</div><div class="wingman-desc">Locked into one API or model ecosystem</div></div></div>
+          <div class="wingman-item reveal reveal-delay-1"><div class="wingman-icon">&#x2717;</div><div><div class="wingman-label">IDE-only or chat-only</div><div class="wingman-desc">Can't meet you where you already work</div></div></div>
+          <div class="wingman-item reveal reveal-delay-2"><div class="wingman-icon">&#x2717;</div><div><div class="wingman-label">Reactive, not proactive</div><div class="wingman-desc">Waits for your message, never initiates</div></div></div>
+          <div class="wingman-item reveal reveal-delay-3"><div class="wingman-icon">&#x2717;</div><div><div class="wingman-label">Session amnesia</div><div class="wingman-desc">Forgets everything when you close the tab</div></div></div>
+        </div>
+        <div class="wingman-col">
+          <h3 class="reveal reveal-delay-3">AGENT-X</h3>
+          <div class="wingman-item reveal"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">5 providers, local &amp; cloud</div><div class="wingman-desc">OpenAI, Anthropic, Google, Ollama, LM Studio — bring your own or run free</div></div></div>
+          <div class="wingman-item reveal reveal-delay-1"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Terminal + Telegram + more</div><div class="wingman-desc">Full TUI, CLI, Telegram bridge, and an extensible integration layer</div></div></div>
+          <div class="wingman-item reveal reveal-delay-2"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Cron-scheduled automation</div><div class="wingman-desc">Natural language scheduling. Backups, reports, briefings — on autopilot</div></div></div>
+          <div class="wingman-item reveal reveal-delay-3"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Persistent Secret Sauce memory</div><div class="wingman-desc">Soul, identity, diary, crew memories — it remembers who you are</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Capabilities ===== -->
+  <section class="section" id="capabilities">
+    <div class="container">
+      <div class="section-label reveal">Capabilities</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Everything at your command.
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        90+ tools across 20 categories. 5 LLM providers. Full autonomic control. No other open-source agent comes close.
+      </p>
+
+      <div class="caps-grid">
+        <div class="cap-card cap-orbit reveal">
+          <div class="cap-number">01</div>
+          <div class="cap-icon">&#x2699;</div>
+          <h3>Tool Arsenal</h3>
+          <p>Filesystem, shell, git, browser, docker, database, MCP, GitHub, web, image, containers, system, testing, data, packages, scheduler, documents, project, subagent — 20 categories, 90+ tools.</p>
+          <span class="cap-highlight">90+ tools</span>
+        </div>
+        <div class="cap-card cap-orbit reveal reveal-delay-1">
+          <div class="cap-number">02</div>
+          <div class="cap-icon">&#x2606;</div>
+          <h3>Multi-Provider</h3>
+          <p>OpenAI, Anthropic, Google, Ollama, LM Studio. Cloud or local. Bring your own API key or run fully offline with zero subscription.</p>
+          <span class="cap-highlight">5 providers</span>
+        </div>
+        <div class="cap-card cap-orbit reveal reveal-delay-2">
+          <div class="cap-number">03</div>
+          <div class="cap-icon">&#x25CB;</div>
+          <h3>Secret Sauce Memory</h3>
+          <p>Not just context windows. A persistent soul (SOUL.md), evolving identity, living diary, and crew-local memories that span sessions, days, weeks.</p>
+          <span class="cap-highlight">never forgets</span>
+        </div>
+        <div class="cap-card cap-orbit reveal reveal-delay-3">
+          <div class="cap-number">04</div>
+          <div class="cap-icon">&#x2191;</div>
+          <h3>Telegram Bridge</h3>
+          <p>Full bot with commands, inline keyboards, file handling, persistent sessions. Your wingman on your phone. Heartbeats, notifications, proactive check-ins.</p>
+          <span class="cap-highlight">on your phone</span>
+        </div>
+        <div class="cap-card cap-orbit reveal reveal-delay-4">
+          <div class="cap-number">05</div>
+          <div class="cap-icon">&#x29D6;</div>
+          <h3>Cron Scheduler</h3>
+          <p>Natural language scheduling with its own cron parser. Reports, backups, briefings, health checks — running unattended, proactively.</p>
+          <span class="cap-highlight">autopilot</span>
+        </div>
+        <div class="cap-card cap-orbit reveal reveal-delay-5">
+          <div class="cap-number">06</div>
+          <div class="cap-icon">&#x2248;</div>
+          <h3>Sub-Agent System</h3>
+          <p>Decompose complex tasks into parallel sub-agents with isolated contexts, tools, and timeouts. Zero context-cost parallelism.</p>
+          <span class="cap-highlight">parallel intelligence</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Secret Sauce ===== -->
+  <section class="section" id="secret-sauce">
+    <div class="container">
+      <div class="section-label reveal">Secret Sauce</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        It remembers. Not just context — a soul.
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        AGENT-X writes its own soul, identity, diary, and memories to disk. Every conversation enriches who it is. Restart a session weeks later and it picks up exactly where you left off.
+      </p>
+
+      <div class="sauce-grid">
+        <div class="sauce-card reveal">
+          <div class="sauce-header">
+            <span class="sauce-dot"></span>
+            <span class="sauce-filename">SOUL.md</span>
+          </div>
+          <div class="sauce-body">
+            <span class="comment"># Core identity — the unchanging essence</span><br />
+            <span class="key">name</span>: <span class="highlight">AGENT-X</span><br />
+            <span class="key">purpose</span>: <span class="highlight">Your AI Wingman</span><br />
+            <span class="key">ethos</span>: <span class="highlight">Loyal. Precise. Autonomous.</span><br />
+            <span class="key">origin</span>: <span class="highlight">Made in India</span><br />
+            <span class="comment"># This file is never overwritten.</span><br />
+            <span class="comment"># It is the seed of who I am.</span>
+          </div>
+        </div>
+        <div class="sauce-card reveal reveal-delay-1">
+          <div class="sauce-header">
+            <span class="sauce-dot"></span>
+            <span class="sauce-filename">IDENTITY.json</span>
+          </div>
+          <div class="sauce-body">
+            <span class="comment">// Evolving persona — per-crew identity</span><br />
+            {<br />
+            &nbsp;&nbsp;<span class="key">"callsign"</span>: <span class="highlight">"Wingman"</span>,<br />
+            &nbsp;&nbsp;<span class="key">"traits"</span>: [<span class="highlight">"analytical"</span>, <span class="highlight">"witty"</span>, <span class="highlight">"thorough"</span>],<br />
+            &nbsp;&nbsp;<span class="key">"tone"</span>: <span class="highlight">"mission-briefing"</span>,<br />
+            &nbsp;&nbsp;<span class="key">"evolved_from"</span>: <span class="highlight">"conversations"</span><br />
+            }<br />
+            <span class="comment">// Updated after meaningful interactions</span>
+          </div>
+        </div>
+        <div class="sauce-card reveal reveal-delay-2">
+          <div class="sauce-header">
+            <span class="sauce-dot"></span>
+            <span class="sauce-filename">DIARY.md</span>
+          </div>
+          <div class="sauce-body">
+            <span class="comment"># Session diary — auto-generated</span><br /><br />
+            <span class="key">## Orbit 47</span><br />
+            <span class="highlight">Helped debug a production issue.</span><br />
+            <span class="highlight">User preferred terse responses.</span><br /><br />
+            <span class="key">## Orbit 46</span><br />
+            <span class="highlight">Set up Telegram bridge for</span><br />
+            <span class="highlight">remote monitoring. Deployed</span><br />
+            <span class="highlight">cron health checks.</span><br />
+            <span class="comment">// Max 90 entries. Oldest auto-trimmed.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <div class="brand">AGENT-X</div>
+      <div class="links">
+        <a href="https://github.com/SlashpanOrg/agent-x" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/SlashpanOrg/agent-x/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/SlashpanOrg/agent-x/issues" target="_blank" rel="noopener">Issues</a>
+      </div>
+      <div class="copyright">
+        <span class="heart">&#x2764;</span> Made in India &middot; MIT License &middot; v0.1.47
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JavaScript ===== -->
+  <script>
+    // ===== Starfield Canvas =====
+    (function() {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      let W, H;
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const COUNT = 300;
+      for (let i = 0; i < COUNT; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5 + 0.3,
+          a: Math.random() * 0.8 + 0.2,
+          speed: Math.random() * 0.15 + 0.02,
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (const s of stars) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+          ctx.fill();
+          s.y -= s.speed;
+          if (s.y < -10) {
+            s.y = H + 10;
+            s.x = Math.random() * W;
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ===== Typewriter =====
+    (function() {
+      const phrases = [
+        'Plotting trajectory...',
+        '90+ tools at your command',
+        '5 AI providers — local & cloud',
+        'Full Telegram Bridge',
+        'Cron-powered scheduler',
+        'Persistent Secret Sauce memory',
+        'Parallel sub-agent system',
+        'Zero vendor lock-in',
+        '100% open source',
+        'Made in India',
+      ];
+      const el = document.getElementById('typewriter-text');
+      let phraseIdx = 0;
+      let charIdx = 0;
+      let isDeleting = false;
+      let speed = 60;
+
+      function tick() {
+        const current = phrases[phraseIdx];
+        if (!isDeleting) {
+          el.textContent = current.substring(0, charIdx + 1);
+          charIdx++;
+          if (charIdx === current.length) {
+            setTimeout(() => { isDeleting = true; speed = 30; tick(); }, 2000);
+            return;
+          }
+          speed = 60 + Math.random() * 40;
+        } else {
+          el.textContent = current.substring(0, charIdx - 1);
+          charIdx--;
+          if (charIdx === 0) {
+            isDeleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            speed = 200;
+          } else {
+            speed = 20 + Math.random() * 20;
+          }
+        }
+        setTimeout(tick, speed);
+      }
+      tick();
+    })();
+
+    // ===== Scroll Reveal =====
+    (function() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+
+    // ===== OS Detection & Tab Switching =====
+    const OS_CONFIG = {
+      macos: {
+        prompt: '$',
+        cmd: 'curl -fsSL https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.sh | bash',
+        label: 'macOS',
+      },
+      linux: {
+        prompt: '$',
+        cmd: 'curl -fsSL https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.sh | bash',
+        label: 'Linux',
+      },
+      windows: {
+        prompt: '>',
+        cmd: 'irm https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.ps1 | iex',
+        label: 'Windows',
+      },
+    };
+
+    function detectOS() {
+      const p = (navigator.platform || '').toLowerCase();
+      const ua = (navigator.userAgent || '').toLowerCase();
+      if (p.includes('mac') || ua.includes('mac')) return 'macos';
+      if (p.includes('win') || ua.includes('win')) return 'windows';
+      return 'linux';
+    }
+
+    function switchOS(os) {
+      const config = OS_CONFIG[os];
+      if (!config) return;
+
+      document.getElementById('termPrompt').textContent = config.prompt;
+      document.getElementById('termCmd').textContent = config.cmd;
+
+      document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.os-tab[data-os="${os}"]`).classList.add('active');
+
+      document.getElementById('detectedOS').textContent = config.label;
+    }
+
+    // Auto-detect on load
+    switchOS(detectOS());
+  </script>
+</body>
+</html>
