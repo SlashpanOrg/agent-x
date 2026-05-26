@@ -29,7 +29,25 @@ function Get-Platform {
 function Test-NodeVersion {
     $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
     if (-not $nodeCmd) {
-        Write-Err "Node.js is not installed. Install Node.js >= $MinNodeVersion from https://nodejs.org"
+        Write-Warn "Node.js not found. Attempting to install Node.js..."
+        $choco = Get-Command choco -ErrorAction SilentlyContinue
+        $winget = Get-Command winget -ErrorAction SilentlyContinue
+        $nodeInstalled = $false
+        if ($choco) {
+            Write-Info "Installing Node.js via Chocolatey..."
+            choco install nodejs-lts -y 2>$null | Out-Null
+            $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+            if ($nodeCmd) { $nodeInstalled = $true }
+        } elseif ($winget) {
+            Write-Info "Installing Node.js via winget..."
+            winget install OpenJS.NodeJS.LTS --silent 2>$null | Out-Null
+            $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+            if ($nodeCmd) { $nodeInstalled = $true }
+        }
+        if (-not $nodeInstalled) {
+            Write-Warn "Automatic Node.js install failed. Please install Node.js >= $MinNodeVersion from https://nodejs.org and re-run the installer."
+            exit 1
+        }
     }
     $version = (node -v) -replace '^v', ''
     $major = [int]($version.Split('.')[0])

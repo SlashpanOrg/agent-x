@@ -100,6 +100,24 @@ check_command() {
 
 check_node() {
   if ! check_command node; then
+    printf "  ${YELLOW}Node.js not found. Attempting to install Node.js...${NC}\n" >&2
+    if [ "$OS" = "darwin" ]; then
+      if check_command brew; then
+        brew install node >/dev/null 2>&1 || true
+      fi
+    elif [ "$OS" = "linux" ]; then
+      if check_command apt-get; then
+        sudo apt-get update >/dev/null 2>&1 || true
+        sudo apt-get install -y nodejs >/dev/null 2>&1 || true
+        sudo apt-get install -y npm >/dev/null 2>&1 || true
+      elif check_command dnf; then
+        sudo dnf install -y nodejs >/dev/null 2>&1 || true
+      elif check_command pacman; then
+        sudo pacman -S --noconfirm nodejs npm >/dev/null 2>&1 || true
+      fi
+    fi
+  fi
+  if ! check_command node; then
     die "Node.js is not installed. Install Node.js >= $MIN_NODE_VERSION: https://nodejs.org"
   fi
   local node_major
