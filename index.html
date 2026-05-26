@@ -135,6 +135,22 @@
     }
 
     /* ===== Hero ===== */
+    .beta-banner {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+      padding: 8px 24px;
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #fff;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
     .hero {
       min-height: 100vh;
       display: flex;
@@ -1184,6 +1200,8 @@
   <canvas id="starfield"></canvas>
   <div id="grid-overlay"></div>
   <div id="scanlines"></div>
+
+  <div class="beta-banner">Still in Beta</div>
 
   <!-- ===== Hero ===== -->
   <section class="hero" id="hero">
