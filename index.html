@@ -253,23 +253,13 @@
       border-radius: 8px;
       border: 1px solid #333;
     }
-    .gh-announce .count-current {
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .gh-announce .count-sep {
-      color: #888;
-      font-size: 0.9rem;
-    }
-    .gh-announce .count-target {
+    .gh-announce .gh-stars-text {
       color: #fff;
       font-size: 0.9rem;
-    }
-    .gh-announce .msg {
-      font-size: 0.8rem;
-      color: #fff;
       letter-spacing: 0.5px;
+    }
+    .gh-announce .gh-stars-text #ghCurrent {
+      font-weight: 700;
     }
     .hero-scroll {
       position: absolute;
@@ -1052,6 +1042,269 @@
       margin-top: 14px;
     }
 
+    /* ===== Join the Crew ===== */
+    #join-crew {
+      border-top: 1px solid #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+    #join-crew .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    #join-crew .section-sub {
+      margin: 0 auto 0;
+    }
+    #join-crew::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    #join-crew::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .jc-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+      margin: 48px auto 0;
+      max-width: 720px;
+      position: relative;
+      z-index: 1;
+    }
+    .jc-quote { text-align: left; }
+    .jc-badge, .jc-cta { align-self: center; }
+    .jc-coords { text-align: center; }
+    .jc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #777;
+      border: 1px solid #333;
+      padding: 6px 14px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+    .jc-badge .pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.3; box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+      50% { opacity: 1; box-shadow: 0 0 8px 2px rgba(255,255,255,0.15); }
+    }
+    .jc-headline {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .jc-headline .accent {
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-color: #444;
+      text-decoration-thickness: 1px;
+    }
+    .jc-sub {
+      color: #888;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .jc-quote {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.7;
+      border-left: 2px solid #333;
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .jc-quote .attribution {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: #555;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .jc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .25s ease;
+      width: fit-content;
+      margin-top: 8px;
+    }
+    .jc-cta:hover {
+      background: #ccc;
+      opacity: 1;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.08);
+    }
+    .jc-cta .arrow {
+      transition: transform .25s ease;
+    }
+    .jc-cta:hover .arrow {
+      transform: translateX(4px);
+    }
+    .jc-coords {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: #444;
+      letter-spacing: 1px;
+      margin-top: 16px;
+    }
+    .jc-coords span {
+      color: #666;
+    }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 16px;
+      max-width: 540px;
+      width: 100%;
+      padding: 40px 36px;
+      position: relative;
+      animation: modal-in .3s ease;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+      transition: color .2s;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #777;
+      border: 1px solid #333;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .modal-box h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+    .modal-box p {
+      color: #999;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .modal-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 24px;
+    }
+    .modal-box ul li {
+      color: #bbb;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .modal-box ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #555;
+    }
+    .modal-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all .25s ease;
+      margin-top: 8px;
+    }
+    .modal-cta:hover {
+      background: #ccc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.08);
+    }
+    .modal-cta .arrow {
+      transition: transform .25s ease;
+    }
+    .modal-cta:hover .arrow {
+      transform: translateX(4px);
+    }
+
     /* ===== Comparison ===== */
     #comparison {
       border-top: 1px solid #1a1a1a;
@@ -1551,10 +1804,7 @@
 
     <div class="gh-announce reveal reveal-delay-5">
       <div class="gh-announce-inner">
-        <span class="count-current" id="ghCurrent">0</span>
-        <span class="count-sep">/</span>
-        <span class="count-target">1,000,000</span>
-        <span class="msg">GitHub stars to unlock source code</span>
+        <span class="gh-stars-text"><span id="ghCurrent">0</span> GitHub stars</span>
       </div>
     </div>
 
@@ -1631,7 +1881,7 @@
         Your Data. Your Rules.
       </h2>
       <p class="section-sub reveal reveal-delay-2">
-        AGENT-X is built local-first and zero-trust. Your data never leaves your machine unless you command it. Every action is gated. Source code will be released at 1,000,000 GitHub stars.
+        AGENT-X is built local-first and zero-trust. Your data never leaves your machine unless you command it. Every action is gated.
       </p>
 
       <div class="trust-grid">
@@ -1650,8 +1900,7 @@
         <div class="trust-card reveal reveal-delay-2">
           <div class="trust-num">03</div>
           <h3>Source Code Locked</h3>
-          <p>The codebase is private until we reach 1,000,000 GitHub stars. Once unlocked, it will be released under MIT License — fully auditable, forkable, improvable. No black boxes. Just patience.</p>
-          <span class="trust-tag">1M stars to unlock</span>
+          <p>The codebase is private and will be released under MIT License — fully auditable, forkable, improvable. No black boxes. Just patience.</p>
         </div>
         <div class="trust-card reveal reveal-delay-3">
           <div class="trust-num">04</div>
@@ -2645,6 +2894,77 @@
     </div>
   </section>
 
+  <!-- ===== Join the Crew ===== -->
+  <section class="section" id="join-crew">
+    <div class="container">
+      <div class="section-label reveal">Join the Crew</div>
+      <h2 class="section-title reveal reveal-delay-1">
+        Build the future.<br />One commit at a time.
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        AGENT-X is open to contributors who believe AI should be local, autonomous, and free.
+        Whether you're into core architecture, plugin development, there's a seat on this ship.
+      </p>
+
+      <div class="jc-body">
+        <div class="jc-badge reveal reveal-delay-3">
+          <span class="pulse"></span>
+          Crew Assembly — Open Positions
+        </div>
+
+        <div class="jc-headline reveal reveal-delay-4">
+          Ready to ship<br />to <span class="accent">production</span>?
+        </div>
+
+        <div class="jc-quote reveal reveal-delay-5">
+          "The best way to predict the future is to build it."
+          <span class="attribution">— Your first PR awaits</span>
+        </div>
+
+        <p class="jc-sub reveal reveal-delay-5">
+          We're looking for engineers, designers, and dreamers who want to shape the next generation
+          of AI tooling. No ego. No bureaucracy. Just clean code, bold ideas, and a shared mission.
+        </p>
+
+        <button class="jc-cta reveal reveal-delay-6" id="openModalBtn">
+          <span>Signal your interest</span>
+          <span class="arrow">&rarr;</span>
+        </button>
+
+        <div class="jc-coords reveal reveal-delay-6">
+          <span>Hailing frequency:</span> sr@slashpan.com
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Modal ===== -->
+    <div class="modal-overlay" id="crewModal">
+      <div class="modal-box">
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+        <div class="modal-badge">Crew Assembly</div>
+        <h3>Before you signal&hellip;</h3>
+        <p>
+          Thank you for your interest in joining the AGENT-X crew. We review every signal personally,
+          but spots are limited and we&rsquo;re deliberate about who joins the mission.
+        </p>
+        <p>To help us understand how you&rsquo;d contribute, please include in your email:</p>
+        <ul>
+          <li>What you&rsquo;d build with AGENT-X &mdash; be specific</li>
+          <li>A link to your best work (GitHub, a project, a PR &mdash; anything real)</li>
+          <li>Why this mission matters to you</li>
+        </ul>
+        <p style="color:#888; font-size:0.85rem;">
+          Thoughtful applications always get a response. Take your time &mdash; we&rsquo;d rather read
+          something genuine than something rushed.
+        </p>
+        <button class="modal-cta" id="modalEmailBtn">
+          <span>Apply via Email</span>
+          <span class="arrow">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Footer ===== -->
   <footer>
     <div class="container">
@@ -3105,6 +3425,39 @@
         }, { threshold: 0.3 });
         obs.observe(section);
       }
+    })();
+
+    // ===== Modal =====
+    (function() {
+      const modal = document.getElementById('crewModal');
+      const openBtn = document.getElementById('openModalBtn');
+      const closeBtn = document.getElementById('closeModalBtn');
+      const emailBtn = document.getElementById('modalEmailBtn');
+
+      function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      emailBtn.addEventListener('click', function() {
+        window.location.href = 'mailto:sr@slashpan.com?subject=Joining%20AGENT-X%20Crew';
+      });
     })();
 
   </script>
