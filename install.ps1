@@ -78,6 +78,25 @@ function Remove-Existing {
     }
 }
 
+# --- Installation mode selection ---
+
+function Select-InstallMode {
+    Write-Host ""
+    Write-Host "  Installation mode:" -ForegroundColor Cyan
+    Write-Host "    1) TUI only     — Terminal interface (lightweight)"
+    Write-Host "    2) TUI + Web-UI — Terminal + browser interface"
+    Write-Host ""
+
+    $choice = Read-Host "  Select [1/2] (default: 2)"
+    if ($choice -eq "1") {
+        $script:INSTALL_MODE = "tui-only"
+        Write-Host "  TUI-only mode selected." -ForegroundColor DarkGray
+    } else {
+        $script:INSTALL_MODE = "full"
+        Write-Host "  Full mode selected (TUI + Web-UI)." -ForegroundColor DarkGray
+    }
+}
+
 # --- Download and install ---
 
 function Install-AgentX {
@@ -86,10 +105,14 @@ function Install-AgentX {
     Write-Ok "Version: $version"
     Write-Ok "Platform: $platform"
 
-    $url = "https://github.com/$Repo/releases/download/$version/agentx-$platform.zip"
-    $tmpFile = Join-Path $env:TEMP "agentx-$platform.zip"
+    $suffix = ""
+    if ($script:INSTALL_MODE -eq "tui-only") {
+        $suffix = "-tui"
+    }
+    $url = "https://github.com/$Repo/releases/download/$version/agentx-$platform$suffix.zip"
+    $tmpFile = Join-Path $env:TEMP "agentx-$platform$suffix.zip"
 
-    Write-Info "Downloading agentx-$platform.zip..."
+    Write-Info "Downloading agentx-$platform$suffix.zip..."
     Invoke-WebRequest -Uri $url -OutFile $tmpFile -ErrorAction Stop
 
     Write-Info "Installing to $InstallDir..."
@@ -176,6 +199,9 @@ Write-Host ""
 Test-NodeVersion
 Write-Host ""
 
+Select-InstallMode
+Write-Host ""
+
 Remove-Existing
 Install-AgentX
 Add-ToPath
@@ -187,6 +213,15 @@ Write-Host "  ╔═════════════════════
 Write-Host "  ║   Agent-X installed successfully! 🚀  ║" -ForegroundColor Green
 Write-Host "  ╚═══════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
-Write-Host "  Get started:   agentx"
+if ($script:INSTALL_MODE -eq "tui-only") {
+    Write-Host "  Installed:     TUI only" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Get started:   agentx"
+} else {
+    Write-Host "  Installed:     TUI + Web-UI" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Get started:   agentx"
+    Write-Host "  Daemon:        agentx start"
+}
 Write-Host "  Help:          agentx --help"
 Write-Host ""

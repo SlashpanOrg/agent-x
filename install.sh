@@ -190,10 +190,37 @@ clean_existing() {
   fi
 }
 
+# --- Installation mode selection ---
+
+select_install_mode() {
+  echo ""
+  echo -e "  ${CYAN}Installation mode:${NC}"
+  echo -e "    ${BOLD}1)${NC} TUI only     — Terminal interface (lightweight)"
+  echo -e "    ${BOLD}2)${NC} TUI + Web-UI — Terminal + browser interface"
+  echo ""
+
+  local choice=""
+  if [ -t 0 ]; then
+    read -p "  Select [1/2] (default: 2): " choice
+  fi
+
+  if [ "$choice" = "1" ]; then
+    INSTALL_MODE="tui-only"
+    echo -e "  ${DIM}TUI-only mode selected.${NC}"
+  else
+    INSTALL_MODE="full"
+    echo -e "  ${DIM}Full mode selected (TUI + Web-UI).${NC}"
+  fi
+}
+
 # --- Download and install ---
 
 download_and_install() {
-  local url="https://github.com/${REPO}/releases/download/${VERSION}/agentx-${PLATFORM}.tar.gz"
+  local suffix=""
+  if [ "${INSTALL_MODE:-full}" = "tui-only" ]; then
+    suffix="-tui"
+  fi
+  local url="https://github.com/${REPO}/releases/download/${VERSION}/agentx-${PLATFORM}${suffix}.tar.gz"
   TMPDIR_INSTALL="$(mktemp -d)"
   trap 'rm -rf "$TMPDIR_INSTALL"' EXIT
 
@@ -344,6 +371,9 @@ main() {
 
   printf "  ${DIM}%s • Node %s • %s${NC}\n\n" "$PLATFORM" "$(node -v)" "$VERSION"
 
+  # Ask user for installation mode
+  select_install_mode
+
   # Animated installation steps
   run_step "Running pre-flight diagnostics..." clean_existing
   run_step "Downloading payload from orbit..." download_and_install
@@ -359,11 +389,19 @@ main() {
   echo -e "  ${GREEN}│${NC}  ${BOLD}Mission ready. Welcome aboard, commander.${NC} ${GREEN}│${NC}"
   echo -e "  ${GREEN}╰────────────────────────────────────────────╯${NC}"
   echo ""
-  echo -e "  ${CYAN}Get started:${NC}"
-  echo -e "    ${BOLD}agentx${NC}                             Launch interactive TUI"
-  echo -e "    ${BOLD}agentx start --token <bot-token>${NC}   Connect Telegram & start daemon"
+  if [ "${INSTALL_MODE:-full}" = "tui-only" ]; then
+    echo -e "  ${CYAN}Installed:${NC}  ${BOLD}TUI only${NC}"
+    echo ""
+    echo -e "  ${CYAN}Get started:${NC}"
+    echo -e "    ${BOLD}agentx${NC}                             Launch interactive TUI"
+  else
+    echo -e "  ${CYAN}Installed:${NC}  ${BOLD}TUI + Web-UI${NC}"
+    echo ""
+    echo -e "  ${CYAN}Get started:${NC}"
+    echo -e "    ${BOLD}agentx${NC}                             Launch interactive TUI"
+    echo -e "    ${BOLD}agentx start${NC}                       Start daemon with Web-UI"
+  fi
   echo ""
-  echo -e "  ${DIM}To get a bot token: open Telegram → @BotFather → /newbot${NC}"
   echo -e "  ${DIM}More info: agentx --help${NC}"
   echo ""
 }
