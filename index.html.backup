@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AGENT-X : Your AI Wingman</title>
-  <meta name="description" content="AGENT-X is a free AI agent with 168 tools, 15 providers, 4 messaging bridges, 22 MCP servers, multi-agent mesh, space-themed Web-UI, and persistent memory. Made in India." />
+  <title>AGENT-X — Your AI Wingman</title>
+  <meta name="description" content="AGENT-X is a free AI agent with 90+ tools, 5 providers, Telegram bridge, cron scheduler, and persistent memory. Made in India." />
   <meta property="og:title" content="AGENT-X — Your AI Wingman" />
-  <meta property="og:description" content="Free AI agent with 168 tools, 15 providers, 4 bridges, 22 MCP servers, and persistent memory. Made in India." />
+  <meta property="og:description" content="Free AI agent with 90+ tools, 5 providers, Telegram bridge, and persistent memory. Made in India." />
   <meta property="og:image" content="https://slashpanorg.github.io/agent-x/assets/social_preview.png" />
   <meta property="og:image:width" content="1280" />
   <meta property="og:image:height" content="640" />
@@ -333,7 +333,7 @@
     }
     .caps-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 2px;
       margin-top: 48px;
       background: #111;
@@ -2241,10 +2241,11 @@
   <section id="stats">
     <div class="container">
       <div class="stats-grid">
-        <div class="stat-item reveal"><div class="stat-number">168</div><div class="stat-label">Tools</div></div>
-        <div class="stat-item reveal reveal-delay-1"><div class="stat-number">15</div><div class="stat-label">Providers</div></div>
-        <div class="stat-item reveal reveal-delay-3"><div class="stat-number">4</div><div class="stat-label">Messaging Bridges</div></div>
-        <div class="stat-item reveal reveal-delay-4"><div class="stat-number">22</div><div class="stat-label">MCP Servers</div></div>
+        <div class="stat-item reveal"><div class="stat-number">90+</div><div class="stat-label">Tools</div></div>
+        <div class="stat-item reveal reveal-delay-1"><div class="stat-number">5</div><div class="stat-label">Providers</div></div>
+
+        <div class="stat-item reveal reveal-delay-3"><div class="stat-number">100%</div><div class="stat-label">Free to Use</div></div>
+        <div class="stat-item reveal reveal-delay-4"><div class="stat-number ">0</div><div class="stat-label">Vendor Lock-in</div></div>
       </div>
     </div>
   </section>
@@ -2309,7 +2310,7 @@
         </div>
         <div class="wingman-col">
           <h3 class="reveal reveal-delay-3">AGENT-X</h3>
-          <div class="wingman-item reveal"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">15 providers, local &amp; cloud</div><div class="wingman-desc">OpenAI, Anthropic, Google, Ollama, LM Studio — bring your own or run free</div></div></div>
+          <div class="wingman-item reveal"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">5 providers, local &amp; cloud</div><div class="wingman-desc">OpenAI, Anthropic, Google, Ollama, LM Studio — bring your own or run free</div></div></div>
           <div class="wingman-item reveal reveal-delay-1"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Terminal + Telegram + more</div><div class="wingman-desc">Full TUI, CLI, Telegram bridge, and an extensible integration layer</div></div></div>
           <div class="wingman-item reveal reveal-delay-2"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Cron-scheduled automation</div><div class="wingman-desc">Natural language scheduling. Backups, reports, briefings — on autopilot</div></div></div>
           <div class="wingman-item reveal reveal-delay-3"><div class="wingman-icon" style="color:#999;">&#x2713;</div><div><div class="wingman-label">Persistent Secret Sauce memory</div><div class="wingman-desc">Soul, identity, diary, crew memories — it remembers who you are</div></div></div>
@@ -2379,108 +2380,6 @@
           </div>
           <div class="provider-name">LM Studio</div>
         </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="20" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <path d="M16 16 L24 8 L32 16 M16 32 L24 40 L32 32" fill="none" stroke="#fff" stroke-width="1"/>
-              <circle cx="24" cy="24" r="4" fill="#fff"/>
-            </svg>
-          </div>
-          <div class="provider-name">Moonshot</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <rect x="8" y="8" width="32" height="32" rx="4" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <text x="24" y="27" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="14" font-weight="700">DS</text>
-            </svg>
-          </div>
-          <div class="provider-name">DeepSeek</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <path d="M12 12 L36 12 L36 36 L12 36 Z" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <circle cx="20" cy="20" r="3" fill="#fff"/><circle cx="28" cy="28" r="3" fill="#fff"/>
-            </svg>
-          </div>
-          <div class="provider-name">Groq</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <path d="M24 8 L40 38 L8 38 Z" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <text x="24" y="28" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">M</text>
-            </svg>
-          </div>
-          <div class="provider-name">Mistral</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="18" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <circle cx="24" cy="24" r="6" fill="#fff"/>
-            </svg>
-          </div>
-          <div class="provider-name">Together</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <path d="M12 36 L24 12 L36 36" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <rect x="16" y="28" width="16" height="8" fill="none" stroke="#fff" stroke-width="1"/>
-            </svg>
-          </div>
-          <div class="provider-name">xAI</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="18" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <path d="M24 6 L30 18 L42 18 L33 26 L36 38 L24 30 L12 38 L15 26 L6 18 L18 18 Z" fill="none" stroke="#fff" stroke-width="1"/>
-            </svg>
-          </div>
-          <div class="provider-name">Fireworks</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="18" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <circle cx="16" cy="16" r="4" fill="#fff"/><circle cx="32" cy="16" r="4" fill="#fff"/>
-              <path d="M16 34 Q24 28 32 34" fill="none" stroke="#fff" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="provider-name">Perplexity</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <rect x="6" y="6" width="36" height="36" rx="6" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <text x="24" y="27" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="14" font-weight="700">C</text>
-            </svg>
-          </div>
-          <div class="provider-name">Cohere</div>
-        </div>
-        <div class="provider-divider"></div>
-        <div class="provider-card">
-          <div class="provider-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48">
-              <path d="M8 36 L24 8 L40 36 Z" fill="none" stroke="#fff" stroke-width="1.2"/>
-              <text x="24" y="28" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">AZ</text>
-            </svg>
-          </div>
-          <div class="provider-name">Azure</div>
-        </div>
       </div>
 
       <p class="provider-footer reveal">Bring any provider. Switch mid-conversation. No subscription. No lock-in.<span class="cursor-blink" style="margin-left:6px;"></span></p>
@@ -2548,23 +2447,23 @@
         Everything at your command.
       </h2>
       <p class="section-sub reveal reveal-delay-2">
-        168 tools across 24 categories. 15 LLM providers. Full autonomic control. No other free agent comes close.
+        90+ tools across 20 categories. 5 LLM providers. Full autonomic control. No other free agent comes close.
       </p>
 
-      <div class="caps-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="caps-grid">
         <div class="cap-card cap-orbit reveal">
           <div class="cap-number">01</div>
           <div class="cap-icon">&#x2699;</div>
           <h3>Tool Arsenal</h3>
-          <p>Filesystem, shell, git, browser, docker, database, MCP, GitHub, web, image, containers, system, testing, data, packages, scheduler, documents, project, subagent — 24 categories, 168 tools.</p>
-          <span class="cap-highlight">168 tools</span>
+          <p>Filesystem, shell, git, browser, docker, database, MCP, GitHub, web, image, containers, system, testing, data, packages, scheduler, documents, project, subagent — 20 categories, 90+ tools.</p>
+          <span class="cap-highlight">90+ tools</span>
         </div>
         <div class="cap-card cap-orbit reveal reveal-delay-1">
           <div class="cap-number">02</div>
           <div class="cap-icon">&#x2606;</div>
           <h3>Multi-Provider</h3>
           <p>OpenAI, Anthropic, Google, Ollama, LM Studio. Cloud or local. Bring your own API key or run fully offline with zero subscription.</p>
-          <span class="cap-highlight">15 providers</span>
+          <span class="cap-highlight">5 providers</span>
         </div>
         <div class="cap-card cap-orbit reveal reveal-delay-2">
           <div class="cap-number">03</div>
@@ -2622,8 +2521,8 @@
           </thead>
           <tbody>
             <tr><td>Free to Use</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td><span class="cross">&#x2717;</span> Subscription</td></tr>
-            <tr><td>Built-in Tools</td><td><span class="check">168 &amp; growing</span></td><td><span class="partial">~ 50+</span></td><td><span class="partial">~ 40&ndash;70</span></td><td><span class="partial">8 core</span></td></tr>
-            <tr><td>Native Multi-Provider</td><td><span class="check">15 &amp; growing</span></td><td><span class="check">5+ providers</span></td><td><span class="check">20+ providers</span></td><td><span class="cross">&#x2717;</span> Proxy only</td></tr>
+            <tr><td>Built-in Tools</td><td><span class="check">90+ &amp; growing</span></td><td><span class="partial">~ 50+</span></td><td><span class="partial">~ 40&ndash;70</span></td><td><span class="partial">8 core</span></td></tr>
+            <tr><td>Native Multi-Provider</td><td><span class="check">5 &amp; docking more</span></td><td><span class="check">5+ providers</span></td><td><span class="check">20+ providers</span></td><td><span class="cross">&#x2717;</span> Proxy only</td></tr>
             <tr><td>Local LLM (Ollama)</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td><span class="partial">~ Via proxy</span></td></tr>
             <tr><td>Crew Profiles</td><td><span class="check">&#x2713;</span></td><td><span class="cross">&#x2717;</span></td><td><span class="cross">&#x2717;</span></td><td><span class="cross">&#x2717;</span></td></tr>
             <tr><td>Permission System</td><td><span class="check">&#x2713;</span></td><td><span class="partial">~ Basic</span></td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td></tr>
@@ -2637,256 +2536,6 @@
     </div>
   </section>
 
-  <!-- ===== Agentic Intelligence ===== -->
-  <section class="section" id="agentic">
-    <div class="container">
-      <div class="section-label reveal">Agentic Intelligence</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        Thinks. Learns. Delegates.
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        AGENT-X doesn't just respond — it reasons, researches, delegates to sub-agents, generates skills from experience, and reflects on every task to improve. All behind the scenes. All automatic.
-      </p>
-
-      <div class="caps-grid" style="margin-top:48px;grid-template-columns:repeat(3,1fr);">
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">01</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M4 22v-4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v4"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="16" cy="8" r="1" fill="currentColor"/></svg></div>
-          <h3>Smart Prompting</h3>
-          <p>Dynamic intent detection selects only relevant tools per request — 168 tools filtered to ~20 per task. Token usage cut by 60%. Reasoning directives auto-select quick/deep/creative mode.</p>
-          <span class="cap-highlight">60% token savings</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1">
-          <div class="cap-number">02</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></div>
-          <h3>Tree of Thoughts</h3>
-          <p>Beam search over reasoning paths. Generate → evaluate → expand top-k → repeat. For complex decisions, explores multiple solutions in parallel and converges on the best.</p>
-          <span class="cap-highlight">multi-path reasoning</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2">
-          <div class="cap-number">03</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="5"/><path d="M12 15v5M9 22h6"/></svg></div>
-          <h3>Research Mode</h3>
-          <p>Auto-decomposes research questions into sub-queries, spawns parallel search agents, then synthesizes a comprehensive report. Like having a research team.</p>
-          <span class="cap-highlight">parallel research</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-3">
-          <div class="cap-number">04</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div>
-          <h3>Reflection Loop</h3>
-          <p>After every task: what worked, what didn't, concrete improvements. Cumulative learnings injected into future system prompts. The agent literally gets smarter the longer it runs.</p>
-          <span class="cap-highlight">self-improving</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-4">
-          <div class="cap-number">05</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h3>Skill Auto-Generation</h3>
-          <p>Detects novel tasks (3+ tool calls, 2+ categories). Auto-generates reusable named skills with trigger patterns. 50 pre-bundled skills covering code gen, devops, testing, docs, security, performance, git workflows, and more.</p>
-          <span class="cap-highlight">50+ skills &amp; growing</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-5">
-          <div class="cap-number">06</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
-          <h3>RAG Auto-Query</h3>
-          <p>Automatically searches indexed documents before every response. Relevant chunks injected into context. You never need to manually search — the agent already knows what's relevant.</p>
-          <span class="cap-highlight">auto-context</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Multi-Agent Mesh ===== -->
-  <section class="section" id="agent-mesh">
-    <div class="container">
-      <div class="section-label reveal">Multi-Agent Mesh</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        One Master.<br />8 Specialists. Infinite Possibilities.
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        AGENT-X uses a Master Controller architecture. The master agent decomposes complex tasks, spawns specialist sub-agents in parallel, and synthesizes results. Like a team, but automated.
-      </p>
-
-      <div class="caps-grid" style="margin-top:48px;">
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">01</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-          <h3>Coder</h3>
-          <p>Writes, refactors, and fixes code. Full-stack awareness. Follows existing patterns. Writes complete implementations with no placeholders.</p>
-          <span class="cap-highlight">production code</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">02</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
-          <h3>Reviewer</h3>
-          <p>Finds bugs, security issues, style violations. Suggests concrete improvements. Thorough but concise.</p>
-          <span class="cap-highlight">code quality</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">03</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3h6M9 3v7l-4 8h14l-4-8V3"/></svg></div>
-          <h3>Tester</h3>
-          <p>Writes unit and integration tests. Verifies coverage. Covers edge cases. Ensures quality before deployment.</p>
-          <span class="cap-highlight">test coverage</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">04</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="5"/><path d="M12 15v5M9 22h6"/></svg></div>
-          <h3>Researcher</h3>
-          <p>Searches web, code, and documents. Synthesizes findings into clear summaries. Finds answers fast.</p>
-          <span class="cap-highlight">web+code+docs</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1">
-          <div class="cap-number">05</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="14" rx="2"/><rect x="7" y="17" width="10" height="4" rx="1"/></svg></div>
-          <h3>DevOps</h3>
-          <p>Manages containers, infrastructure, deployments. Docker, CI/CD, cloud CLIs. Automates everything.</p>
-          <span class="cap-highlight">infra automation</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1">
-          <div class="cap-number">06</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16v14H4zM4 6l8-4 8 4"/></svg></div>
-          <h3>Docs Writer</h3>
-          <p>Generates READMEs, API docs, changelogs, and contributing guides. Clear, concise, well-structured.</p>
-          <span class="cap-highlight">documentation</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1">
-          <div class="cap-number">07</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg></div>
-          <h3>Architect</h3>
-          <p>Designs system architecture. Evaluates tradeoffs. Documents decisions. Thinks at the system level.</p>
-          <span class="cap-highlight">system design</span>
-        </div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1">
-          <div class="cap-number">08</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4a5 5 0 0 0-5 5v2H5l2 3-2 3h2.5A5 5 0 0 0 12 20a5 5 0 0 0 4.5-3H19l-2-3 2-3h-2V9a5 5 0 0 0-5-5z"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/></svg></div>
-          <h3>Debugger</h3>
-          <p>Systematically isolates bugs. Finds root causes. Applies fixes. Verifies with tests. Methodical approach.</p>
-          <span class="cap-highlight">root cause</span>
-        </div>
-      </div>
-
-      <p style="text-align:center;margin-top:32px;color:#888;font-family:JetBrains Mono,monospace;font-size:0.85rem;">
-        Master decomposes. Specialists execute in parallel. Results merge.
-      </p>
-    </div>
-  </section>
-
-  <!-- ===== Multi-Platform Bridges ===== -->
-  <section class="section" id="bridges">
-    <div class="container">
-      <div class="section-label reveal">Lives Where You Do</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        4 Bridges. One Agent.<br class="hide-desktop" /> Infinite Reach.
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        Start a conversation on Telegram, continue on Discord, get notified on Slack, reply via Email. AGENT-X follows you across platforms with session continuity and per-user isolation.
-      </p>
-
-      <div class="caps-grid" style="margin-top:48px;">
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">01</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg></div>
-          <h3>Telegram</h3>
-          <p>Full bot with commands, inline keyboards, file uploads, persistent sessions. Your wingman on your phone. Heartbeats, notifications, proactive check-ins.</p>
-          <span class="cap-highlight">production-ready</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">02</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="12" rx="2"/><line x1="10" y1="10" x2="10" y2="10.01"/><line x1="14" y1="10" x2="14" y2="10.01"/></svg></div>
-          <h3>Discord</h3>
-          <p>Slash commands (/ask, /status, /crew), threaded DMs, file attachments, per-user session isolation. Connect your community.</p>
-          <span class="cap-highlight">discord.js</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">03</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <h3>Slack</h3>
-          <p>Socket Mode bot with @mentions, thread replies, file sharing, interactive blocks. No public URL needed — works behind firewalls.</p>
-          <span class="cap-highlight">Bolt SDK</span>
-        </div>
-        <div class="cap-card cap-orbit reveal">
-          <div class="cap-number">04</div>
-          <div class="cap-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg></div>
-          <h3>Email</h3>
-          <p>IMAP polling + SMTP sending with thread detection (In-Reply-To). Attachments supported. Per-sender session isolation.</p>
-          <span class="cap-highlight">nodemailer</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Python RPC ===== -->
-  <section class="section" id="python-rpc">
-    <div class="container">
-      <div class="section-label reveal">Compute</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        Zero Context Cost.<br class="hide-desktop" /> Infinite Compute.
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        Sub-agents can execute Python scripts in isolated subprocesses. Data processing, computations, ML pipelines — run without consuming LLM context tokens. Pure Python. Pure speed.
-      </p>
-      <div class="trust-grid" style="margin-top:48px;">
-        <div class="trust-card reveal">
-          <div class="trust-num">01</div>
-          <h3>Isolated Execution</h3>
-          <p>Each Python RPC runs in its own subprocess with temp working directories. No cross-contamination between tasks.</p>
-        </div>
-        <div class="trust-card reveal">
-          <div class="trust-num">02</div>
-          <h3>Streaming Output</h3>
-          <p>Async generator yields stdout/stderr lines as they arrive. Real-time progress visible in the Web-UI timeline.</p>
-        </div>
-        <div class="trust-card reveal">
-          <div class="trust-num">03</div>
-          <h3>pip Integration</h3>
-          <p>Auto-detect Python installations. Install packages on-demand into isolated directories. Check availability before execution.</p>
-        </div>
-        <div class="trust-card reveal">
-          <div class="trust-num">04</div>
-          <h3>JSON Arguments</h3>
-          <p>Pass structured args via PYTHON_RPC_ARGS env var. Access with os.environ.get(). No manual serialization needed.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== MCP Arsenal ===== -->
-  <section class="section" id="mcp-library">
-    <div class="container">
-      <div class="section-label reveal">MCP Arsenal</div>
-      <h2 class="section-title reveal reveal-delay-1">
-        22 Pre-Configured<br class="hide-desktop" /> MCP Servers.
-      </h2>
-      <p class="section-sub reveal reveal-delay-2">
-        Every MCP server is pre-configured in the library — you just enable and set credentials. Zero discovery work. All open-source. All ready to use.
-      </p>
-
-      <div class="caps-grid" style="margin-top:48px;grid-template-columns:repeat(4,1fr);">
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">01</div><h3>filesystem</h3><p>Full filesystem access with scope and permission controls.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">02</div><h3>github</h3><p>PRs, issues, repos, workflows, releases, reviews.</p><span class="cap-highlight">PAT</span></div>
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">03</div><h3>postgres</h3><p>Query, schema introspection, and migration operations.</p><span class="cap-highlight">DATABASE_URL</span></div>
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">04</div><h3>sqlite</h3><p>Local database operations with full SQL support.</p><span class="cap-highlight">SQLITE_PATH</span></div>
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">05</div><h3>brave-search</h3><p>Web and local search with Brave Search API.</p><span class="cap-highlight">API_KEY</span></div>
-        <div class="cap-card cap-orbit reveal"><div class="cap-number">06</div><h3>puppeteer</h3><p>Headless browser control for screenshots and scraping.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">07</div><h3>memory</h3><p>Persistent knowledge graph with entity storage.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">08</div><h3>git</h3><p>Repository operations: log, diff, branch, commit.</p><span class="cap-highlight">GIT_ROOT</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">09</div><h3>google-maps</h3><p>Geocoding, directions, places, and distance matrix.</p><span class="cap-highlight">API_KEY</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">10</div><h3>slack</h3><p>Channel operations, messaging, and user management.</p><span class="cap-highlight">BOT_TOKEN</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">11</div><h3>sequential-thinking</h3><p>Step-by-step reasoning for complex problems.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-1"><div class="cap-number">12</div><h3>notion</h3><p>Pages, databases, blocks, and comments.</p><span class="cap-highlight">API_TOKEN</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">13</div><h3>airtable</h3><p>Base and table operations with record management.</p><span class="cap-highlight">API_KEY</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">14</div><h3>docker</h3><p>Container management: run, list, logs, exec.</p><span class="cap-highlight">Docker</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">15</div><h3>playwright</h3><p>Headless browser with screenshot and interaction.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">16</div><h3>fetch</h3><p>HTTP requests with redirect support and JSON parsing.</p><span class="cap-highlight">no auth</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">17</div><h3>redis</h3><p>Cache operations: get, set, del, flush, keys, ttl.</p><span class="cap-highlight">REDIS_URL</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-2"><div class="cap-number">18</div><h3>mysql</h3><p>Query, schema management, and connection pooling.</p><span class="cap-highlight">MYSQL_URL</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-3"><div class="cap-number">19</div><h3>elasticsearch</h3><p>Full-text search engine with index management.</p><span class="cap-highlight">ES_URL</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-3"><div class="cap-number">20</div><h3>rag</h3><p>Vector search with Chroma and OpenAI embeddings.</p><span class="cap-highlight">OPENAI_KEY</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-3"><div class="cap-number">21</div><h3>exa-search</h3><p>Semantic web search with neural relevance ranking.</p><span class="cap-highlight">EXA_KEY</span></div>
-        <div class="cap-card cap-orbit reveal reveal-delay-3"><div class="cap-number">22</div><h3>everart</h3><p>AI image generation with EverArt API.</p><span class="cap-highlight">API_KEY</span></div>
-      </div>
-    </div>
-  </section>
   <!-- ===== Web UI ===== -->
   <section class="section" id="web-ui">
     <div class="container">
