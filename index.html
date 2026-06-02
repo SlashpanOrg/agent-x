@@ -150,7 +150,18 @@
       color: #fff;
       font-weight: 600;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
     }
+    .beta-banner a {
+      font-size: 0.65rem;
+      color: #555;
+      letter-spacing: 1px;
+      transition: color .2s;
+    }
+    .beta-banner a:hover { color: #fff; opacity: 1; }
     .hero {
       min-height: 100vh;
       display: flex;
@@ -994,6 +1005,9 @@
       from { transform: rotate(0deg) translateX(20px) rotate(0deg); }
       to { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
     }
+
+    .icon { width: 24px; height: 24px; display: inline-block; vertical-align: middle; margin-bottom: 8px; }
+    .icon svg { width: 100%; height: 100%; color: inherit; }
 
     /* ===== Privacy & Trust ===== */
     #trust {
@@ -2140,6 +2154,24 @@
   </style>
 </head>
 <body>
+  <!-- SVG Icon Definitions -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <g id="ic-filesystem"><rect x="2" y="1" width="10" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 4h10" stroke="currentColor" stroke-width="1"/><line x1="5" y1="4" x2="5" y2="1" stroke="currentColor" stroke-width="1"/></g>
+      <g id="ic-shell"><rect x="1" y="2" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="7" y="10" text-anchor="middle" font-size="5" font-family="monospace" fill="currentColor">$_</text></g>
+      <g id="ic-code"><text x="7" y="11" text-anchor="middle" font-size="8" font-family="monospace" fill="currentColor">&lt;/&gt;</text></g>
+      <g id="ic-git"><circle cx="7" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="4" x2="7" y2="1" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="6" x2="7" y2="4" stroke="currentColor" stroke-width="1"/><line x1="10" y1="6" x2="7" y2="4" stroke="currentColor" stroke-width="1"/></g>
+      <g id="ic-web"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="7" cy="7" rx="5" ry="2.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="2" y1="7" x2="12" y2="7" stroke="currentColor" stroke-width="1"/></g>
+      <g id="ic-document"><rect x="2" y="1" width="8" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="5" x2="8" y2="5" stroke="currentColor" stroke-width="1"/><line x1="4" y1="8" x2="8" y2="8" stroke="currentColor" stroke-width="1"/><line x1="4" y1="11" x2="6" y2="11" stroke="currentColor" stroke-width="1"/></g>
+      <g id="ic-database"><ellipse cx="7" cy="3" rx="5" ry="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 3v8c0 1.1 2.2 2 5 2s5-.9 5-2V3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 7c0 1.1 2.2 2 5 2s5-.9 5-2" fill="none" stroke="currentColor" stroke-width="1"/></g>
+      <g id="ic-container"><rect x="2" y="3" width="10" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1"/><line x1="3" y1="9" x2="11" y2="9" stroke="currentColor" stroke-width="0.5"/></g>
+      <g id="ic-test"><rect x="2" y="5" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="5" y1="5" x2="5" y2="2" stroke="currentColor" stroke-width="1"/><line x1="9" y1="5" x2="9" y2="2" stroke="currentColor" stroke-width="1"/><text x="7" y="10" text-anchor="middle" font-size="3" font-family="monospace" fill="currentColor">OK</text></g>
+      <g id="ic-agent"><circle cx="7" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="8" width="10" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><rect x="5" y="10" width="4" height="1" rx="0.5" fill="currentColor"/></g>
+      <g id="ic-security"><rect x="4" y="1" width="6" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 5v3" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="9" r="0.8" fill="currentColor"/></g>
+      <g id="ic-ai"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="6" r="1" fill="currentColor"/><circle cx="9" cy="6" r="1" fill="currentColor"/><text x="7" y="12" text-anchor="middle" font-size="4" font-family="monospace" fill="currentColor">AI</text></g>
+      <g id="ic-tool"><rect x="2" y="3" width="10" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="1"/><line x1="7" y1="7" x2="10" y2="10" stroke="currentColor" stroke-width="1.5"/></g>
+    </defs>
+  </svg>
 
   <!-- ===== Canvas Starfield ===== -->
   <canvas id="starfield"></canvas>
@@ -2232,6 +2264,105 @@
             <span style="color:#888;">Detected your system as</span> <span id="detectedOS" style="font-family:'JetBrains Mono',monospace;color:#fff;text-transform:uppercase;">macOS</span><br />
             Already have it? Run <code style="font-family:'JetBrains Mono',monospace;color:#888;">agentx update</code> to get the latest.
           </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why Agent-X ===== -->
+  <section id="why" class="section">
+    <div class="container reveal">
+      <div class="section-label">WHY AGENT-X</div>
+      <div class="section-title">What Sets Us Apart</div>
+      <div class="section-sub">Three unique reasoning engines, zero dead code, and enterprise-grade safety that no competitor matches.</div>
+    </div>
+    <div class="container" style="margin-top:48px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#111;">
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">01 UNIQUE</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Tree of Thoughts</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Beam search reasoning that generates multiple thought paths, evaluates each, and explores the best. No competitor has this.</p>
+        </div>
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">02 UNIQUE</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Reflection Loop</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Self-improving agent that learns from every interaction and injects cumulative learnings into future responses.</p>
+        </div>
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">03 UNIQUE</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Skill Auto-Generation</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Automatically creates reusable skills from novel task patterns. Persists across sessions.</p>
+        </div>
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">04 QUALITY</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Zero Dead Code</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">0 @ts-nocheck files. 0 unwired modules. 0 stub handlers. Every module is actively called in the agent loop.</p>
+        </div>
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">05 SAFETY</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Enterprise-Grade Safety</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">437-line SafetyAuditor. Full RBAC PolicyEngine. SSO (Google, GitHub, Microsoft). Audit logging. No competitor has this.</p>
+        </div>
+        <div style="background:#000;padding:32px 24px;transition:background .3s;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:#555;margin-bottom:16px;">06 ARCHITECTURE</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">12-Stage Pipeline</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">12-stage pipeline with typed contracts. No raw payloads ever reach providers. Every module is wired, tested, and production-grade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Tools Grid ===== -->
+  <section id="tools-grid" class="section">
+    <div class="container reveal">
+      <div class="section-label">168 TOOLS · 24 CATEGORIES</div>
+      <div class="section-title">The Arsenal</div>
+      <div class="section-sub">The most comprehensive tool catalog of any AI agent. Every tool has a complete JSON schema, risk level, and composability flag. Zero stubs.</div>
+    </div>
+    <div class="container" style="margin-top:48px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2px;background:#111;">
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-filesystem"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Filesystem</h4><p style="color:#666;font-size:0.78rem;">Read, write, delete, copy, diff, archive, metadata — 15 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-shell"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Shell & Process</h4><p style="color:#666;font-size:0.78rem;">Exec, background, kill, list, streaming — 5 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-code"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Code Intelligence</h4><p style="color:#666;font-size:0.78rem;">Search, replace, definitions, symbols, patch, lint, fix — 13 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-git"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Git & VCS</h4><p style="color:#666;font-size:0.78rem;">Status, diff, commit, branch, checkout, stash, blame — 13 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-web"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Web & Browser</h4><p style="color:#666;font-size:0.78rem;">Search, scrape, HTTP, download, browse, screenshot — 11 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-document"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Documents</h4><p style="color:#666;font-size:0.78rem;">PDF, DOCX, PPTX, XLSX, MD, HTML, JSON, YAML, LaTeX — 15 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-database"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Database</h4><p style="color:#666;font-size:0.78rem;">SQLite query, schema, export, env-read, migrate — 5 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-container"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Containers</h4><p style="color:#666;font-size:0.78rem;">List, logs, start, stop, exec, run, compose, build — 9 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-test"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Testing</h4><p style="color:#666;font-size:0.78rem;">Run, watch, coverage, create, benchmark — 5 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-agent"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Agent Meta</h4><p style="color:#666;font-size:0.78rem;">Delegate, ask, spawn, status, cancel — 10 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-security"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">Security</h4><p style="color:#666;font-size:0.78rem;">Audit, secrets scan, checksum, encrypt, decrypt, JWT — 7 tools</p></div>
+        <div style="background:#000;padding:24px 20px;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'"><div style="font-size:1.5rem;margin-bottom:8px;color:#888;"><svg width="24" height="24"><use href="#ic-ai"/></svg></div><h4 style="font-weight:600;font-size:0.9rem;margin-bottom:4px;">AI Meta</h4><p style="color:#666;font-size:0.78rem;">Complete, embed, summarize, classify, extract, memory — 7 tools</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Reasoning ===== -->
+  <section id="reasoning" class="section">
+    <div class="container reveal">
+      <div class="section-label">UNIQUE TO AGENT-X</div>
+      <div class="section-title">Advanced Reasoning</div>
+      <div class="section-sub">Three reasoning systems no other agent has. Tree of Thoughts for complex problems, Research Engine for deep synthesis, Reflection Loop for self-improvement.</div>
+    </div>
+    <div class="container" style="margin-top:48px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#111;">
+        <div style="background:#000;padding:36px 28px;text-align:center;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:#555;margin-bottom:16px;">01 · BEAM SEARCH</div>
+          <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:12px;">Tree of Thoughts</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Generate → Evaluate → Expand. Beam width 3, depth 3. Triggers on 200+ word queries with multi-step constraints.</p>
+          <span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:#444;border:1px solid #1a1a1a;padding:2px 10px;border-radius:3px;margin-top:14px;">UNIQUE</span>
+        </div>
+        <div style="background:#000;padding:36px 28px;text-align:center;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:#555;margin-bottom:16px;">02 · PARALLEL SYNTHESIS</div>
+          <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:12px;">Research Engine</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Decompose query → parallel sub-agents → synthesize report. Auto-maps tools per query type.</p>
+          <span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:#444;border:1px solid #1a1a1a;padding:2px 10px;border-radius:3px;margin-top:14px;">UNIQUE</span>
+        </div>
+        <div style="background:#000;padding:36px 28px;text-align:center;" onmouseover="this.style.background='#0a0a0a'" onmouseout="this.style.background='#000'">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:#555;margin-bottom:16px;">03 · SELF-IMPROVEMENT</div>
+          <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:12px;">Reflection Loop</h3>
+          <p style="color:#777;font-size:0.85rem;line-height:1.7;">Extracts learnings from every task. Accumulates across sessions. Auto-injected into future prompts.</p>
+          <span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:#444;border:1px solid #1a1a1a;padding:2px 10px;border-radius:3px;margin-top:14px;">UNIQUE</span>
         </div>
       </div>
     </div>
@@ -2615,9 +2746,9 @@
             <tr>
               <th>Feature</th>
               <th>AGENT-X</th>
-              <th>OpenClaw</th>
-              <th>Hermes Agent</th>
-              <th>Claude Code</th>
+              <th>Tool A</th>
+              <th>Tool B</th>
+              <th>Tool C</th>
             </tr>
           </thead>
           <tbody>
@@ -3148,7 +3279,7 @@
               <div class="msg-time">07:22</div>
             </div>
             <div class="msg msg-left">
-              <div class="msg-bubble">Deployment complete. All services nominal. 🔥</div>
+              <div class="msg-bubble">Deployment complete. All services nominal.</div>
               <div class="msg-time">07:23</div>
             </div>
           </div>
