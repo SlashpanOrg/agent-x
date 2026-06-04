@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Agent-X Installer — Space Edition
+# Agent-X Installer — Ground Control Edition
 # Usage: curl -fsSL https://raw.githubusercontent.com/SlashpanOrg/agent-x/main/install.sh | bash
 
 REPO="SlashpanOrg/agent-x"
@@ -11,7 +11,7 @@ VERSION="${AGENTX_VERSION:-latest}"
 MIN_NODE_VERSION=20
 LOG_FILE="${INSTALL_DIR}/install.log"
 
-# Colors
+# Colours
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -21,7 +21,7 @@ DIM='\033[2m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-# --- Animated spinner ---
+# ─── Animated spinner ─────────────────────────────────────────────────
 
 SPINNER_FRAMES=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
 SPINNER_PID=""
@@ -54,17 +54,189 @@ stop_spinner() {
   fi
 }
 
+# ─── Animated progress bar (indeterminate) ────────────────────────────
+
+PROGRESS_PID=""
+
+start_progress() {
+  local msg="$1"
+  (
+    local chars=('▰' '▰' '▰' '▰' '▰' '▱' '▱' '▱' '▱' '▱')
+    local i=0
+    while true; do
+      local bar=""
+      for j in {0..4}; do
+        pos=$(( (i + j) % ${#chars[@]} ))
+        bar="${bar}${chars[$pos]}"
+      done
+      printf "\r  ${DIM}⏳${NC} ${msg} ${DIM}[${bar}]${NC}" >&2
+      i=$((i + 1))
+      sleep 0.15
+    done
+  ) &
+  PROGRESS_PID=$!
+}
+
+stop_progress() {
+  local success="${1:-true}"
+  local msg="$2"
+  if [ -n "$PROGRESS_PID" ]; then
+    kill "$PROGRESS_PID" 2>/dev/null || true
+    wait "$PROGRESS_PID" 2>/dev/null || true
+    PROGRESS_PID=""
+  fi
+  if [ "$success" = "true" ]; then
+    printf "\r  ${GREEN}✓${NC} ${msg}\n" >&2
+  else
+    printf "\r  ${RED}✗${NC} ${msg}\n" >&2
+  fi
+}
+
+# ─── Rotating mission phrases ────────────────────────────────────────
+
+MISSION_IDX=0
+MISSION_PHRASES=(
+  "Calibrating orbital insertion vectors"
+  "Synchronising quantum entanglement buffers"
+  "Establishing neural handshake protocol"
+  "Deploying phased-array telemetry array"
+  "Running pre-flight diagnostic suite"
+  "Engaging inertial dampeners"
+  "Aligning main reflector dish"
+  "Warming up magnetron spindles"
+  "Initialising subspace transceiver"
+  "Performing cross-check on nav computers"
+  "Boosting signal gain on deep-space network"
+  "Running parity check on uplink channel"
+  "Calculating Lagrange point insertion burn"
+  "Spooling up reaction control wheels"
+  "Synchronising atomic clock array"
+  "Pinging relay satellite constellation"
+  "Verifying encryption handshake keys"
+  "Charging capacitor banks for main bus"
+  "Unfurling solar panel arrays"
+  "Loading mission parameters into flight computer"
+  "Cross-referencing star charts with telemetry"
+  "Running final go/no-go poll"
+  "Priming thruster ignition sequence"
+  "Acquiring lock on navigation beacon"
+  "Stabilising attitude control system"
+  "Verifying life support telemetry downlink"
+  "Cycling coolant through primary loop"
+  "Performing burn-time calculation"
+  "Calibrating star tracker against known reference"
+  "Checking pressure seals on payload bay"
+  "Uploading waypoint sequence to autopilot"
+  "Running loopback test on comms channel"
+)
+
+get_phrase() {
+  MISSION_IDX=$(( (MISSION_IDX + 1) % ${#MISSION_PHRASES[@]} ))
+  echo "${MISSION_PHRASES[$MISSION_IDX]}"
+}
+
+mission_phrase() {
+  local phrase
+  phrase=$(get_phrase)
+  printf "  ${DIM}⟡ ${phrase}...${NC}"
+}
+
+# ─── Rocket art ──────────────────────────────────────────────────────
+
+rocket_banner() {
+  printf "  ${DIM}         _____${NC}\n"
+  printf "  ${DIM}      .-'     '-.${NC}\n"
+  printf "  ${DIM}    .'    ${CYAN}.-.${NC}    '.${NC}\n"
+  printf "  ${DIM}   /   ${CYAN}.-'   '-.${NC}    \\${NC}\n"
+  printf "  ${DIM}  : ${CYAN}:${NC}           ${CYAN}:${NC}   :${NC}\n"
+  printf "  ${DIM}  : ${CYAN}|${NC}  ${PURPLE}✦  ★  ✦${NC}  ${CYAN}|${NC}   :${NC}\n"
+  printf "  ${DIM}   \\ ${CYAN}'-._   _.-'${NC}  /${NC}\n"
+  printf "  ${DIM}    '. ${CYAN}  '-'  ${NC}  .'${NC}\n"
+  printf "  ${DIM}      '-._____.-'${NC}\n"
+  printf "  ${DIM}         ${YELLOW}|   |${NC}\n"
+  printf "  ${DIM}         ${YELLOW}|   |${NC}\n"
+  printf "  ${DIM}        ${YELLOW}/     \\${NC}\n"
+  printf "  ${DIM}       ${YELLOW}/       \\${NC}\n"
+  printf "  ${DIM}      ${YELLOW}/         \\${NC}\n"
+  printf "  ${DIM}     ${YELLOW}/  ${PURPLE}~ ~ ~${NC}  ${YELLOW}\\${NC}\n"
+  printf "  ${DIM}    ${YELLOW}/  ${PURPLE}~ ~ ~ ~${NC}  ${YELLOW}\\${NC}\n"
+  printf "  ${DIM}   ${YELLOW}/  ${PURPLE}~ ~ ~ ~ ~${NC}  ${YELLOW}\\${NC}\n"
+  printf "  ${DIM}  ${YELLOW}/  ${PURPLE}~ ~ ~ ~ ~${NC}   ${YELLOW}\\${NC}\n"
+  printf "  ${DIM} /                   \\${NC}\n"
+  printf "  ${DIM}|    ${CYAN}AGENT-X${NC}         |${NC}\n"
+  printf "  ${DIM}|  ${CYAN}GROUND CONTROL${NC}    |${NC}\n"
+  printf "  ${DIM}|  ${DIM}launch: $(date +%H:%M:%S)${NC}    |${NC}\n"
+  printf "  ${DIM} \\___________________/${NC}\n"
+}
+
+# ─── Signal meter ────────────────────────────────────────────────────
+
+signal_meter() {
+  local level="${1:-0}"
+  local bars=""
+  for i in {1..5}; do
+    if [ "$i" -le "$level" ]; then
+      bars="${bars}${GREEN}█${NC}"
+    else
+      bars="${bars}${DIM}░${NC}"
+    fi
+  done
+  case "$level" in
+    0|1) printf "  ${DIM}SIG:${NC} ${bars} ${RED}POOR${NC}" ;;
+    2|3) printf "  ${DIM}SIG:${NC} ${bars} ${YELLOW}FAIR${NC}" ;;
+    4|5) printf "  ${DIM}SIG:${NC} ${bars} ${GREEN}LOCK${NC}" ;;
+  esac
+}
+
+# ─── Telemetry header ────────────────────────────────────────────────
+
+telemetry_header() {
+  local phase="$1"
+  printf "\n"
+  rocket_banner
+  printf "\n"
+  printf "  ${DIM}╔══════════════════════════════════════════════════╗${NC}\n"
+  printf "  ${DIM}║${NC}  ${CYAN}MISSION CONTROL${NC}  ${DIM}•${NC}  ${BOLD}AGENT-X DEPLOYMENT${NC}     ${DIM}║${NC}\n"
+  printf "  ${DIM}╠══════════════════════════════════════════════════╣${NC}\n"
+  printf "  ${DIM}║${NC}  $(signal_meter $(( RANDOM % 3 + 3 )))                          ${DIM}║${NC}\n"
+  printf "  ${DIM}║${NC}  ${DIM}STAT:${NC} ${CYAN}${phase}${NC}                         ${DIM}║${NC}\n"
+  printf "  ${DIM}║${NC}  ${DIM}T+$(date +%s):${NC} $(date '+%H:%M:%S UTC')                    ${DIM}║${NC}\n"
+  printf "  ${DIM}╚══════════════════════════════════════════════════╝${NC}\n"
+  printf "\n"
+}
+
+# ─── Countdown ───────────────────────────────────────────────────────
+
+countdown() {
+  local secs=3
+  printf "\n"
+  printf "  ${CYAN}T-minus:${NC}\n"
+  while [ "$secs" -gt 0 ]; do
+    printf "\r  ${BOLD}${secs}${NC}  ${DIM}seconds to deployment...${NC}" >&2
+    sleep 1
+    secs=$((secs - 1))
+  done
+  printf "\r  ${GREEN}LAUNCH${NC}  ${DIM}All systems nominal.${NC}\n"
+  sleep 0.5
+}
+
+# ─── Errors ──────────────────────────────────────────────────────────
+
 die() {
   stop_spinner "false" "$1" 2>/dev/null || true
-  printf "\n  ${RED}Houston, we have a problem:${NC}\n" >&2
-  printf "  ${RED}%s${NC}\n\n" "$1" >&2
+  stop_progress "false" "$1" 2>/dev/null || true
+  printf "\n  ${RED}╔═══════════════════════════════════════════╗${NC}\n" >&2
+  printf "  ${RED}║${NC}  ${RED}⚠  MISSION ABORT${NC}                        ${RED}║${NC}\n" >&2
+  printf "  ${RED}║${NC}  ${RED}${1}${NC}  ${RED}║${NC}\n" >&2
+  printf "  ${RED}╚═══════════════════════════════════════════╝${NC}\n" >&2
   if [ -f "$LOG_FILE" ]; then
-    printf "  ${DIM}Full log: %s${NC}\n\n" "$LOG_FILE" >&2
+    printf "  ${DIM}Full telemetry log: %s${NC}\n" "$LOG_FILE" >&2
   fi
+  printf "\n" >&2
   exit 1
 }
 
-# --- Platform detection ---
+# ─── Platform detection ──────────────────────────────────────────────
 
 detect_platform() {
   local os arch
@@ -83,16 +255,15 @@ detect_platform() {
     *)             die "Unsupported architecture: $arch" ;;
   esac
 
-  # Intel Mac users get ARM binary (runs via Rosetta 2)
   if [ "$OS" = "darwin" ] && [ "$ARCH" = "x64" ]; then
-    warn "Intel Mac detected — using ARM binary (runs via Rosetta 2)"
+    OS="darwin"
     ARCH="arm64"
   fi
 
   PLATFORM="${OS}-${ARCH}"
 }
 
-# --- Pre-requisite checks ---
+# ─── Pre-requisite checks ────────────────────────────────────────────
 
 check_command() {
   command -v "$1" >/dev/null 2>&1
@@ -119,11 +290,11 @@ check_node() {
     if ! $installed && ! check_command node; then
       printf "\n  ${RED}Node.js could not be installed automatically.${NC}\n" >&2
       if [ "$OS" = "darwin" ]; then
-        printf "  Please install Node.js (v$MIN_NODE_VERSION+) manually:\n"
+        printf "  Please install Node.js (v${MIN_NODE_VERSION}+) manually:\n"
         printf "    ${CYAN}brew install node${NC}\n"
         printf "    Or download from: https://nodejs.org/en/download${NC}\n"
       elif [ "$OS" = "linux" ]; then
-        printf "  Please install Node.js (v$MIN_NODE_VERSION+) manually.\n"
+        printf "  Please install Node.js (v${MIN_NODE_VERSION}+) manually.\n"
         printf "    ${CYAN}sudo apt-get install -y nodejs npm${NC}  (Debian/Ubuntu)\n"
         printf "    ${CYAN}sudo dnf install -y nodejs${NC}         (Fedora)\n"
         printf "    ${CYAN}sudo pacman -S nodejs npm${NC}          (Arch)\n"
@@ -135,7 +306,7 @@ check_node() {
   local node_major
   node_major=$(node -v | sed 's/^v//' | cut -d. -f1)
   if [ "$node_major" -lt "$MIN_NODE_VERSION" ]; then
-    die "Node.js $MIN_NODE_VERSION+ required (found $(node -v)). Upgrade: https://nodejs.org"
+    die "Node.js ${MIN_NODE_VERSION}+ required (found $(node -v)). Upgrade: https://nodejs.org"
   fi
 }
 
@@ -145,19 +316,21 @@ check_curl() {
   fi
 }
 
-# --- Version resolution ---
+# ─── Version resolution ──────────────────────────────────────────────
 
 get_version() {
   if [ "$VERSION" = "latest" ]; then
+    start_progress "Resolving latest release tag from GitHub..."
     VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null \
       | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+    stop_progress "true" "Latest release: ${VERSION}"
     if [ -z "$VERSION" ]; then
       die "Failed to determine latest version. Check your internet connection."
     fi
   fi
 }
 
-# --- Clean existing installation ---
+# ─── Clean existing installation ─────────────────────────────────────
 
 clean_existing() {
   if [ -d "$INSTALL_DIR" ]; then
@@ -168,7 +341,6 @@ clean_existing() {
     rm -f "$BIN_DIR/agentx"
   fi
 
-  # Clear cache and logs (stale data from previous versions)
   local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/agentx"
   if [ -d "$cache_dir" ]; then
     rm -rf "$cache_dir"
@@ -179,7 +351,6 @@ clean_existing() {
     rm -rf "$data_dir/logs"
   fi
 
-  # Clean global npm/pnpm installs of agentx if present
   if check_command agentx; then
     local existing_path
     existing_path=$(command -v agentx)
@@ -190,35 +361,35 @@ clean_existing() {
   fi
 }
 
-# --- Installation mode selection ---
+# ─── Installation mode selection ─────────────────────────────────────
 
 select_install_mode() {
   echo ""
-  echo -e "  ${CYAN}Installation mode:${NC}"
-  echo -e "    ${BOLD}1)${NC} TUI only     — Terminal interface (lightweight)"
-  echo -e "    ${BOLD}2)${NC} TUI + Web-UI — Terminal + browser interface"
+  printf "  ${CYAN}DEPLOYMENT CONFIGURATION${NC}\n"
+  printf "  ${DIM}──────────────────────────────────────────────────${NC}\n"
+  printf "  ${BOLD}1${NC}) ${CYAN}TUI only${NC}     ${DIM}— Terminal interface (lightweight)${NC}\n"
+  printf "  ${BOLD}2${NC}) ${CYAN}TUI + Web-UI${NC} ${DIM}— Terminal + browser interface${NC}\n"
   echo ""
 
   local choice=""
 
-  # Allow overriding via environment variable for non-interactive installs
   if [ -n "${AGENTX_INSTALL_MODE:-}" ]; then
     choice="${AGENTX_INSTALL_MODE}"
-  # When piped (curl | bash), stdin is not a TTY. Read from /dev/tty instead.
   elif [ -e /dev/tty ]; then
-    read -p "  Select [1/2] (default: 2): " choice < /dev/tty
+    printf "  ${DIM}Select payload configuration [1/2] (default: 2):${NC} " >&2
+    read -r choice < /dev/tty
   fi
 
   if [ "$choice" = "1" ]; then
     INSTALL_MODE="tui-only"
-    echo -e "  ${DIM}TUI-only mode selected.${NC}"
+    printf "  ${DIM}Payload: TUI-only (lightweight)${NC}\n\n"
   else
     INSTALL_MODE="full"
-    echo -e "  ${DIM}Full mode selected (TUI + Web-UI).${NC}"
+    printf "  ${DIM}Payload: TUI + Web-UI (full deployment)${NC}\n\n"
   fi
 }
 
-# --- Download and install ---
+# ─── Download with real progress bar ─────────────────────────────────
 
 download_and_install() {
   local suffix=""
@@ -229,15 +400,33 @@ download_and_install() {
   TMPDIR_INSTALL="$(mktemp -d)"
   trap 'rm -rf "$TMPDIR_INSTALL"' EXIT
 
-  if ! curl -fsSL "$url" -o "${TMPDIR_INSTALL}/agentx.tar.gz"; then
+  printf "  ${DIM}Downlinking from:${NC} ${CYAN}%s${NC}\n" "$url"
+  mkdir -p "$INSTALL_DIR"
+
+  curl --progress-bar -SL "$url" -o "${TMPDIR_INSTALL}/agentx.tar.gz" 2>&1 | \
+    while IFS= read -r line; do
+      if [[ "$line" =~ ([0-9]+)% ]]; then
+        local pct="${BASH_REMATCH[1]}"
+        local filled=$((pct / 5))
+        local empty=$((20 - filled))
+        local bar=""
+        for ((i=0; i<filled; i++)); do bar="${bar}${CYAN}█${NC}"; done
+        for ((i=0; i<empty; i++)); do bar="${bar}${DIM}░${NC}"; done
+        printf "\r  ${DIM}RX:${NC} [${bar}] ${BOLD}%3d%%${NC} %s" "$pct" "$(mission_phrase)" >&2
+      fi
+    done
+
+  if [ ! -f "${TMPDIR_INSTALL}/agentx.tar.gz" ]; then
     die "Download failed. Check your internet connection."
   fi
 
-  mkdir -p "$INSTALL_DIR"
+  printf "\r  ${DIM}RX:${NC} [${CYAN}████████████████████${NC}] ${BOLD}100%%${NC} ${GREEN}Payload received${NC}\n"
+  printf "  ${DIM}Unpacking payload...${NC}\n"
   tar -xzf "${TMPDIR_INSTALL}/agentx.tar.gz" -C "$INSTALL_DIR"
+  printf "  ${GREEN}✓${NC} Payload extracted to ${CYAN}%s${NC}\n" "$INSTALL_DIR"
 }
 
-# --- Rebuild native modules ---
+# ─── Rebuild native modules ──────────────────────────────────────────
 
 rebuild_native() {
   mkdir -p "$(dirname "$LOG_FILE")"
@@ -246,7 +435,6 @@ rebuild_native() {
     npm install --omit=dev --ignore-scripts >> "$LOG_FILE" 2>&1 || true
     npx --yes node-gyp rebuild --directory=node_modules/better-sqlite3 >> "$LOG_FILE" 2>&1 || \
       npm rebuild better-sqlite3 >> "$LOG_FILE" 2>&1 || true
-    # Copy rebuilt .node to expected location
     if [ -f node_modules/better-sqlite3/build/Release/better_sqlite3.node ]; then
       mkdir -p build/Release
       cp node_modules/better-sqlite3/build/Release/better_sqlite3.node build/Release/
@@ -269,8 +457,9 @@ EOF
 }
 
 ensure_path() {
-  if [[ ":$PATH:" == *":$BIN_DIR:"* ]]; then
-    return
+  if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+    export PATH="$BIN_DIR:$PATH"
+    printf "  ${DIM}Navigation beacon locked for this session${NC}\n"
   fi
 
   local shell_rc=""
@@ -281,47 +470,37 @@ ensure_path() {
   esac
 
   if [ -n "$shell_rc" ] && [ -f "$shell_rc" ]; then
-    printf '\n# Agent-X\nexport PATH="%s:$PATH"\n' "$BIN_DIR" >> "$shell_rc"
-    printf "  ${DIM}Added %s to PATH in %s${NC}\n" "$BIN_DIR" "$shell_rc"
-    # Try to source the profile if running interactively
-    if [[ $- == *i* ]]; then
-      case "$shell_rc" in
-        *.zshrc|*.bashrc)
-          printf "  ${CYAN}Reloading your shell profile...${NC}\n"
-          # shellcheck disable=SC1090
-          . "$shell_rc"
-          ;;
-        *.config/fish/config.fish)
-          printf "  ${CYAN}Reloading your fish config...${NC}\n"
-          source "$shell_rc"
-          ;;
-      esac
+    if ! grep -q "# Agent-X" "$shell_rc" 2>/dev/null; then
+      printf '\n# Agent-X\nexport PATH="%s:$PATH"\n' "$BIN_DIR" >> "$shell_rc"
+      printf "  ${DIM}Permanent navigation beacon added to %s${NC}\n" "$shell_rc"
+      if [[ $- == *i* ]]; then
+        # shellcheck disable=SC1090
+        . "$shell_rc" 2>/dev/null || true
+      fi
     fi
-    printf "  ${DIM}If 'agentx' is still not found, restart your terminal or run: source %s${NC}\n" "$shell_rc"
+    printf "  ${DIM}To use in new terminals: source %s${NC}\n" "$shell_rc"
   else
     echo ""
-    printf "  ${DIM}Add this to your shell profile:${NC}\n"
+    printf "  ${DIM}Add this to your shell profile for persistence across sessions:${NC}\n"
     printf "  ${CYAN}export PATH=\"%s:\$PATH\"${NC}\n" "$BIN_DIR"
-    printf "  ${DIM}Then restart your terminal or run: source <profile>${NC}\n"
   fi
 }
 
-# --- Verify ---
+# ─── Verify ──────────────────────────────────────────────────────────
 
 verify_install() {
   if [ ! -f "$INSTALL_DIR/index.js" ] || [ ! -f "$INSTALL_DIR/agentx" ]; then
-    die "Installation failed — files not found in $INSTALL_DIR"
+    die "Installation failed — payload integrity check failed in $INSTALL_DIR"
   fi
 }
 
-# --- Install optional dependencies (Tesseract for OCR) ---
+# ─── Install optional dependencies (Tesseract for OCR) ───────────────
 
 install_optional_deps() {
   if check_command tesseract; then
-    return 0 # Already installed
+    return 0
   fi
 
-  # Attempt auto-install based on platform
   if [ "$OS" = "darwin" ]; then
     if check_command brew; then
       brew install tesseract >/dev/null 2>&1 || true
@@ -336,7 +515,6 @@ install_optional_deps() {
     fi
   fi
 
-  # Verify it installed
   if ! check_command tesseract; then
     printf "  ${YELLOW}⚠${NC}  Tesseract OCR not installed (needed for image text extraction)\n"
     printf "  ${DIM}  Install manually: brew install tesseract (macOS) or sudo apt install tesseract-ocr (Ubuntu)${NC}\n"
@@ -344,70 +522,72 @@ install_optional_deps() {
   return 0
 }
 
-# --- Animated step runner ---
+# ─── Animated step runner ────────────────────────────────────────────
 
 run_step() {
   local msg="$1"
   shift
-  start_spinner "$msg"
+  mission_phrase > /dev/null
+  start_progress "$msg"
   if "$@"; then
-    stop_spinner "true" "$msg"
+    stop_progress "true" "$msg"
   else
-    stop_spinner "false" "$msg"
+    stop_progress "false" "$msg"
     die "$msg failed"
   fi
 }
 
-# --- Main ---
+# ─── Main ────────────────────────────────────────────────────────────
 
 main() {
-  echo ""
-  echo -e "  ${CYAN}╭────────────────────────────────────────────╮${NC}"
-  echo -e "  ${CYAN}│${NC}    ${BOLD}✦  A G E N T - X${NC}  ${DIM}— Your AI Wingman${NC}     ${CYAN}│${NC}"
-  echo -e "  ${CYAN}╰────────────────────────────────────────────╯${NC}"
-  echo ""
+  clear 2>/dev/null || printf "\033c" 2>/dev/null || true
+  telemetry_header "PRE-LAUNCH"
 
+  printf "  ${DIM}Running pre-flight checks...${NC}\n"
   detect_platform
-
-  # Pre-flight checks (fast, no spinner needed)
   check_curl
   check_node
   get_version
 
-  printf "  ${DIM}%s • Node %s • %s${NC}\n\n" "$PLATFORM" "$(node -v)" "$VERSION"
+  printf "  ${DIM}Telemetry:${NC} ${CYAN}%s${NC} • ${CYAN}Node %s${NC} • ${CYAN}%s${NC}\n\n" "$PLATFORM" "$(node -v)" "$VERSION"
 
-  # Ask user for installation mode
   select_install_mode
 
-  # Animated installation steps
-  run_step "Running pre-flight diagnostics..." clean_existing
-  run_step "Downloading payload from orbit..." download_and_install
-  run_step "Assembling quantum modules..." rebuild_native
-  run_step "Locking navigation coordinates..." create_symlink
-  run_step "Verifying mission integrity..." verify_install
-  run_step "Installing optical sensors (OCR)..." install_optional_deps
+  countdown
+
+  printf "\n"
+
+  run_step "Clearing previous installation artifacts" clean_existing
+  download_and_install
+  run_step "Assembling native modules" rebuild_native
+  run_step "Locking navigation coordinates" create_symlink
+  run_step "Running payload integrity check" verify_install
+  run_step "Installing auxiliary sensors (OCR)" install_optional_deps
 
   ensure_path
 
   echo ""
-  echo -e "  ${GREEN}╭────────────────────────────────────────────╮${NC}"
-  echo -e "  ${GREEN}│${NC}  ${BOLD}Mission ready. Welcome aboard, commander.${NC} ${GREEN}│${NC}"
-  echo -e "  ${GREEN}╰────────────────────────────────────────────╯${NC}"
+  printf "  ${GREEN}╔══════════════════════════════════════════════════╗${NC}\n"
+  printf "  ${GREEN}║${NC}                                                ${GREEN}║${NC}\n"
+  printf "  ${GREEN}║${NC}       ${BOLD}✦  DEPLOYMENT COMPLETE  ✦${NC}            ${GREEN}║${NC}\n"
+  printf "  ${GREEN}║${NC}       ${DIM}Agent-X is now operational.${NC}           ${GREEN}║${NC}\n"
+  printf "  ${GREEN}║${NC}                                                ${GREEN}║${NC}\n"
+  printf "  ${GREEN}╚══════════════════════════════════════════════════╝${NC}\n"
   echo ""
   if [ "${INSTALL_MODE:-full}" = "tui-only" ]; then
-    echo -e "  ${CYAN}Installed:${NC}  ${BOLD}TUI only${NC}"
+    printf "  ${CYAN}Payload:${NC}  ${BOLD}TUI only${NC}\n"
     echo ""
-    echo -e "  ${CYAN}Get started:${NC}"
-    echo -e "    ${BOLD}agentx${NC}                             Launch interactive TUI"
+    printf "  ${CYAN}Engage:${NC}\n"
+    printf "    ${BOLD}agentx${NC}                             Launch interactive TUI\n"
   else
-    echo -e "  ${CYAN}Installed:${NC}  ${BOLD}TUI + Web-UI${NC}"
+    printf "  ${CYAN}Payload:${NC}  ${BOLD}TUI + Web-UI${NC}\n"
     echo ""
-    echo -e "  ${CYAN}Get started:${NC}"
-    echo -e "    ${BOLD}agentx${NC}                             Launch interactive TUI"
-    echo -e "    ${BOLD}agentx start${NC}                       Start daemon with Web-UI"
+    printf "  ${CYAN}Engage:${NC}\n"
+    printf "    ${BOLD}agentx${NC}                             Launch interactive TUI\n"
+    printf "    ${BOLD}agentx start${NC}                       Start daemon with Web-UI\n"
   fi
   echo ""
-  echo -e "  ${DIM}More info: agentx --help${NC}"
+  printf "  ${DIM}Mission control: agentx --help${NC}\n"
   echo ""
 }
 
