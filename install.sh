@@ -24,6 +24,7 @@ NC='\033[0m'
 # ─── Animated spinner ─────────────────────────────────────────────────
 
 SPINNER_FRAMES=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+BRAILLE_FRAMES=('⣀' '⣄' '⣤' '⣦' '⣶' '⣷' '⣿' '⣷' '⣶' '⣦' '⣤' '⣄')
 SPINNER_PID=""
 
 start_spinner() {
@@ -48,9 +49,9 @@ stop_spinner() {
     SPINNER_PID=""
   fi
   if [ "$success" = "true" ]; then
-    printf "\r  ${GREEN}✓${NC} ${msg}\n" >&2
+    printf "\r  ${GREEN}✓${NC} ${msg}\033[K\n" >&2
   else
-    printf "\r  ${RED}✗${NC} ${msg}\n" >&2
+    printf "\r  ${RED}✗${NC} ${msg}\033[K\n" >&2
   fi
 }
 
@@ -69,7 +70,8 @@ start_progress() {
         pos=$(( (i + j) % ${#chars[@]} ))
         bar="${bar}${chars[$pos]}"
       done
-      printf "\r  ${DIM}⏳${NC} ${msg} ${DIM}[${bar}]${NC}" >&2
+      local braile_idx=$(( i % ${#BRAILLE_FRAMES[@]} ))
+      printf "\r  ${CYAN}${BRAILLE_FRAMES[$braile_idx]}${NC} ${msg} ${DIM}[${bar}]${NC}" >&2
       i=$((i + 1))
       sleep 0.15
     done
@@ -86,9 +88,9 @@ stop_progress() {
     PROGRESS_PID=""
   fi
   if [ "$success" = "true" ]; then
-    printf "\r  ${GREEN}✓${NC} ${msg}\n" >&2
+    printf "\r  ${GREEN}✓${NC} ${msg}\033[K\n" >&2
   else
-    printf "\r  ${RED}✗${NC} ${msg}\n" >&2
+    printf "\r  ${RED}✗${NC} ${msg}\033[K\n" >&2
   fi
 }
 
@@ -541,7 +543,7 @@ main() {
   echo ""
   printf "  ${GREEN}╔══════════════════════════════════════════════════╗${NC}\n"
   printf "  ${GREEN}║${NC}                                                  ${GREEN}║${NC}\n"
-  printf "  ${GREEN}║${NC}            ${BOLD}✦  DEPLOYMENT COMPLETE  ✦${NC}            ${GREEN}║${NC}\n"
+  printf "  ${GREEN}║${NC}            ${BOLD}✦  DEPLOYMENT COMPLETE  ✦${NC}             ${GREEN}║${NC}\n"
   printf "  ${GREEN}║${NC}           ${DIM}Agent-X is now operational.${NC}           ${GREEN}║${NC}\n"
   printf "  ${GREEN}║${NC}                                                  ${GREEN}║${NC}\n"
   printf "  ${GREEN}╚══════════════════════════════════════════════════╝${NC}\n"
