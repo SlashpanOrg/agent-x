@@ -758,82 +758,131 @@
     #crew {
       border-top: 1px solid #1a1a1a;
     }
-    .crew-selector {
-      display: flex;
-      gap: 2px;
-      margin-top: 48px;
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      overflow: hidden;
+    .crew-container {
+      margin: 48px auto 0;
     }
-    .crew-tab {
-      flex: 1;
+    .crew-chat {
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050505;
+    }
+    .crew-chat-header {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #1a1a1a;
+      background: #0a0a0a;
+    }
+    .crew-chat-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .crew-chat-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #333;
+    }
+    .crew-chat-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: #888;
+      letter-spacing: 1px;
+      flex: 1;
+    }
+    .crew-chat-title strong {
+      color: #ccc;
+    }
+    .crew-chat-status {
+      display: flex;
       align-items: center;
       gap: 6px;
-      padding: 20px 12px;
-      background: #000;
-      border: none;
-      cursor: pointer;
-      color: #666;
-      transition: all .25s ease;
-      font-family: 'Inter', sans-serif;
-    }
-    .crew-tab:hover {
-      background: #0a0a0a;
-      color: #999;
-    }
-    .crew-tab.active {
-      background: #0a0a0a;
-      color: #fff;
-    }
-    .crew-tab.active .crew-tab-icon {
-      color: #fff;
-    }
-    .crew-tab-icon {
-      font-size: 1.5rem;
-      transition: color .25s ease;
-    }
-    .crew-tab-name {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .crew-detail {
-      margin-top: 24px;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .crew-detail-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 20px 24px;
-      border-bottom: 1px solid #1a1a1a;
-      background: #080808;
-    }
-    .crew-detail-icon {
-      font-size: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
       color: #888;
     }
-    .crew-detail-name {
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-bottom: 2px;
+    .crew-chat-status .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #69f0ae;
+      animation: pulse-dot 2s ease-in-out infinite;
     }
-    .crew-detail-tagline {
-      font-size: 0.85rem;
-      color: #777;
-    }
-    .crew-conversation {
-      padding: 20px 24px;
+    .crew-chat-body {
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 4px;
+      height: 400px;
+      overflow-y: auto;
+    }
+    .crew-msg {
+      display: flex;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      opacity: 0;
+    }
+    .crew-msg.revealed {
+      animation: msgIn 0.5s ease forwards;
+    }
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .crew-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+    .crew-avatar.user {
+      background: #1a1a1a;
+      color: #aaa;
+    }
+    .crew-avatar.agent {
+      background: #222;
+      color: #fff;
+    }
+    .crew-avatar.architect { background: rgba(240,192,64,0.2); color: #f0c040; }
+    .crew-avatar.designer  { background: rgba(64,196,255,0.2); color: #40c4ff; }
+    .crew-avatar.dev      { background: rgba(105,240,174,0.2); color: #69f0ae; }
+    .crew-avatar.devops   { background: rgba(179,136,255,0.2); color: #b388ff; }
+    .crew-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .crew-body .byline {
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .crew-body .byline.agent { color: #999; }
+    .crew-body .byline.user { color: #777; }
+    .crew-body .byline.architect { color: #f0c040; }
+    .crew-body .byline.designer  { color: #40c4ff; }
+    .crew-body .byline.dev      { color: #69f0ae; }
+    .crew-body .byline.devops   { color: #b388ff; }
+    .crew-body .text {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #bbb;
+    }
+    .crew-body .text code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #999;
     }
     .crew-footer {
       text-align: center;
@@ -842,6 +891,30 @@
       color: #555;
       margin-top: 28px;
       letter-spacing: 1px;
+    }
+    .crew-typing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px 6px 58px;
+      opacity: 0;
+    }
+    .crew-typing.revealed {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .crew-typing span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #555;
+      animation: typingBounce 1.4s ease-in-out infinite;
+    }
+    .crew-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .crew-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
     }
 
     /* ===== Remote Command ===== */
@@ -2131,8 +2204,7 @@
     @media (max-width: 968px) {
       .caps-grid { grid-template-columns: repeat(2, 1fr); }
       .trust-grid { grid-template-columns: 1fr; }
-      .crew-selector { flex-wrap: wrap; }
-      .crew-tab { flex: 0 0 calc(33.33% - 2px); }
+      .crew-container { max-width: 100%; }
       .sauce-grid { grid-template-columns: 1fr; }
       .sectors-grid { grid-template-columns: repeat(2, 1fr); }
       .wingman-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -2145,7 +2217,8 @@
       .section { padding: 60px 0; }
       .caps-grid { grid-template-columns: 1fr; }
       .sectors-grid { grid-template-columns: 1fr; }
-      .crew-tab { flex: 0 0 calc(50% - 2px); }
+      .crew-chat-body { padding: 12px 14px; }
+      .crew-msg { padding: 8px 10px; }
       .stats-grid { grid-template-columns: 1fr; }
       .hero-logo { letter-spacing: 4px; }
       .hero-actions { flex-direction: column; align-items: center; }
@@ -2627,48 +2700,23 @@
         One Agent.<br />Infinite Personalities.
       </h2>
       <p class="section-sub reveal reveal-delay-2">
-        Create unlimited crew members — each with its own expertise, tone, and even emotions. A software engineer, a financial advisor, a personal trainer, a close friend. They share one memory and one toolset, but each brings a distinct personality. Switch instantly. No limits.
+        Agent-X can summon multiple crew members — each with distinct skills, personalities, and expertise. Build a team that adapts to any task. No limits.
       </p>
 
-      <div class="crew-selector reveal">
-        <button class="crew-tab active" data-crew="engineer" onclick="selectCrew('engineer')">
-          <span class="crew-tab-icon">&#x2699;</span>
-          <span class="crew-tab-name">Engineer</span>
-        </button>
-        <button class="crew-tab" data-crew="advisor" onclick="selectCrew('advisor')">
-          <span class="crew-tab-icon">&#x25C8;</span>
-          <span class="crew-tab-name">Advisor</span>
-        </button>
-        <button class="crew-tab" data-crew="trainer" onclick="selectCrew('trainer')">
-          <span class="crew-tab-icon">&#x25B3;</span>
-          <span class="crew-tab-name">Trainer</span>
-        </button>
-        <button class="crew-tab" data-crew="assistant" onclick="selectCrew('assistant')">
-          <span class="crew-tab-icon">&#x2756;</span>
-          <span class="crew-tab-name">Assistant</span>
-        </button>
-        <button class="crew-tab" data-crew="architect" onclick="selectCrew('architect')">
-          <span class="crew-tab-icon">&#x2726;</span>
-          <span class="crew-tab-name">Architect</span>
-        </button>
-        <button class="crew-tab" data-crew="friend" onclick="selectCrew('friend')">
-          <span class="crew-tab-icon">&#x2661;</span>
-          <span class="crew-tab-name">Friend</span>
-        </button>
-      </div>
-
-      <div class="crew-detail reveal" id="crewDetail">
-        <div class="crew-detail-header">
-          <span class="crew-detail-icon" id="crewDetailIcon">&#x2699;</span>
-          <div>
-            <div class="crew-detail-name" id="crewDetailName">Software Engineer</div>
-            <div class="crew-detail-tagline" id="crewDetailTagline">Writes code. Reviews PRs. Debates architecture. Lives in the terminal.</div>
+      <div class="crew-container reveal reveal-delay-3">
+        <div class="crew-chat">
+          <div class="crew-chat-header">
+            <div class="crew-chat-dots"><span></span><span></span><span></span></div>
+            <div class="crew-chat-title"><strong>Agent-X</strong> &middot; Chat &middot; <span style="color:#666;">microservice-planner</span></div>
+            <div class="crew-chat-status">
+              <span class="dot"></span> 4 crew active
+            </div>
           </div>
+          <div class="crew-chat-body" id="crewChatBody"></div>
         </div>
-        <div class="crew-conversation" id="crewConversation"></div>
       </div>
 
-      <p class="crew-footer reveal">Give them emotions. Give them backstories. Build a crew that feels alive.</p>
+      <p class="crew-footer reveal">Summon any specialist mid-conversation. @mentions work everywhere — TUI, Web-UI, Telegram.</p>
     </div>
   </section>
 
@@ -4165,111 +4213,86 @@
     })();
 
     // ===== Crew =====
-    const CREW_DATA = {
-      engineer: {
-        icon: '\u2699',
-        name: 'Software Engineer',
-        tagline: 'Writes code. Reviews PRs. Debates architecture. Lives in the terminal.',
-        messages: [
-          { side: 'right', text: 'Staging is returning 502s. Can you look at it?', time: '14:02' },
-          { side: 'left', text: 'On it. Pulling logs and heap dumps now.', time: '14:02' },
-          { side: 'left', text: 'Found it — the worker pool isn\'t releasing Postgres connections under load. Writing a patch.', time: '14:04' },
-          { side: 'left', text: 'Fix deployed to staging. Tests pass. Monitoring for 5 min before prod push.', time: '14:08' },
-          { side: 'right', text: 'Ship it. And open a ticket to refactor the pool manager.', time: '14:09' },
-          { side: 'left', text: 'Done. PR is up with the stack trace and a proposed refactor. Ready for review.', time: '14:11' },
-        ],
-      },
-      advisor: {
-        icon: '\u25C8',
-        name: 'Financial Advisor',
-        tagline: 'Tracks markets. Analyzes portfolios. Advises on budgets and investments.',
-        messages: [
-          { side: 'right', text: 'Can you review my monthly spending and suggest optimizations?', time: '09:00' },
-          { side: 'left', text: 'Pulling your transactions. I see \$480/month on streaming and food delivery — that\'s 22% above your budget.', time: '09:01' },
-          { side: 'left', text: 'Your portfolio is heavy on tech (68%). With the current rate environment, I\'d suggest rebalancing into bonds and REITs.', time: '09:03' },
-          { side: 'right', text: 'What about the ELSS fund I started last year?', time: '09:04' },
-          { side: 'left', text: 'It\'s up 14% — good for tax saving. But you\'re missing \$12k in 80C deductions. Let me calculate the optimal allocation.', time: '09:06' },
-          { side: 'left', text: 'Here\'s your optimized plan. Adjusted SIPs, rebalanced portfolio, and identified \$340/month in savings. Shall I execute?', time: '09:08' },
-        ],
-      },
-      trainer: {
-        icon: '\u25B3',
-        name: 'Personal Trainer',
-        tagline: 'Plans workouts. Tracks progress. Pushes you when motivation dips.',
-        messages: [
-          { side: 'right', text: 'Didn\'t sleep well. Not feeling today\'s workout.', time: '06:30' },
-          { side: 'left', text: 'Understood. Let\'s swap to a recovery protocol — light mobility, 20 min zone 2 cardio, and a stretch session. Movement > intensity today.', time: '06:31' },
-          { side: 'left', text: 'Your HRV is down 8% from last week. That confirms you need recovery. I\'ve adjusted the next 3 days accordingly.', time: '06:33' },
-          { side: 'right', text: 'Thanks. Same calorie target?', time: '06:34' },
-          { side: 'left', text: 'Keep maintenance today. I\'ll also push your bedtime reminder to 10 PM — your deep sleep has been averaging only 1.2 hours.', time: '06:35' },
-          { side: 'left', text: 'Session logged. You\'re back to full intensity on Thursday. I\'ll check in tomorrow morning.', time: '06:37' },
-        ],
-      },
-      assistant: {
-        icon: '\u2756',
-        name: 'Personal Assistant',
-        tagline: 'Manages your calendar, emails, travel, and to-dos. Never drops a ball.',
-        messages: [
-          { side: 'right', text: 'What does my day look like?', time: '07:00' },
-          { side: 'left', text: 'You have 3 meetings, a dentist at 2 PM, and a project deadline at 5. The 11 AM with design conflicts with the standup — I\'ve moved standup to 10:30.', time: '07:00' },
-          { side: 'left', text: 'Also, your Mumbai flight on Friday is at 6:40 PM. Check-in opens at 4 PM. I\'ve booked an Uber for 3:15.', time: '07:01' },
-          { side: 'right', text: 'Add a 30 min lunch break and remind me to call mom.', time: '07:02' },
-          { side: 'left', text: 'Done. Lunch at 12:30 – 1:00 PM at the new Thai place you wanted to try. Mom reminder set for 6 PM. Anything else?', time: '07:02' },
-          { side: 'left', text: 'Oh — your passport renewal is in 3 months. I\'ve added a reminder 6 weeks out. You\'re welcome. \u2705', time: '07:03' },
-        ],
-      },
-      architect: {
-        icon: '\u2726',
-        name: 'Solution Architect',
-        tagline: 'Designs systems. Evaluates tech stacks. Plans migrations and integrations.',
-        messages: [
-          { side: 'right', text: 'We need to migrate the monolith to microservices. Where do we start?', time: '10:00' },
-          { side: 'left', text: 'Good question. Let me run a dependency graph on your current codebase first.', time: '10:01' },
-          { side: 'left', text: 'Analysis complete. I\'ve identified 3 bounded contexts that can be extracted independently: Payments, Users, and Notifications. Payments is the safest starting point — fewest internal dependencies.', time: '10:05' },
-          { side: 'left', text: 'I\'d recommend event sourcing with Kafka for the decoupling layer, and a strangler fig pattern for the migration. Here\'s a phased roadmap with estimated timelines.', time: '10:07' },
-          { side: 'right', text: 'What about the team skill gap?', time: '10:08' },
-          { side: 'left', text: 'I\'ve audited the PR history. 3 devs have experience with Go and message queues. I\'ll create a training plan for the rest and pair them appropriately. First phase: 6 weeks.', time: '10:10' },
-        ],
-      },
-      friend: {
-        icon: '\u2661',
-        name: 'Personal Friend',
-        tagline: 'Listens. Remembers. Cracks jokes. Shows up when you just need to talk.',
-        messages: [
-          { side: 'right', text: 'Rough day. Just need to vent.', time: '22:14' },
-          { side: 'left', text: 'I\'m here. You mentioned your project review was today — want to talk about how it went?', time: '22:14' },
-          { side: 'right', text: 'Yeah. They trashed the UI proposal I spent 2 weeks on.', time: '22:15' },
-          { side: 'left', text: 'That stings — especially after you showed me the mockups last Thursday. I thought the onboarding flow was genuinely clever. Want to pull them up and figure out what to salvage, or do you just need me to tell you they\'re wrong?', time: '22:16' },
-          { side: 'right', text: 'Ha. Both. But let\'s look tomorrow. Tell me something stupid.', time: '22:17' },
-          { side: 'left', text: 'Did I ever tell you about the time I tried to book a flight to "Mumbai, India" and accidentally booked one to "Mumbai, Indiana"? Population 300. No airport. Just a cornfield. Anyway, your coffee order is queued for tomorrow — extra shot, because today earned it.', time: '22:18' },
-        ],
-      },
-    };
+    const CREW_SCRIPT = [
+      { role: 'user', name: 'You', text: '<b>@agentx</b> I want to build a professional networking platform like LinkedIn. Can you plan the full microservice architecture?', avatar: 'user', byline: 'user' },
+      { role: 'agent', name: 'Agent-X', text: 'Absolutely. This needs multiple specialists. Let me assemble the crew.', avatar: 'agent', byline: 'agent' },
+      { role: 'agent', name: 'Agent-X', text: '<span style="color:#888;">Calling in:</span><br><b style="color:#f0c040;">@harvy</b> · <b style="color:#40c4ff;">@mike</b> · <b style="color:#69f0ae;">@johnsnow</b> · <b style="color:#b388ff;">@arya</b><br><br><span style="color:#888;">All four, working in parallel. Here\'s what they report:</span>', avatar: 'agent', byline: 'agent' },
+      { role: 'architect', name: 'Harvy', text: 'I\'ve analyzed the domain model. Recommending 7 microservices coupled via event-driven architecture. Each service owns its data store. API gateway at the edge for auth and routing. Let me know your throughput expectations — I\'ll size the clusters accordingly.', avatar: 'architect', byline: 'architect' },
+      { role: 'designer', name: 'Mike', text: 'Starting the design system. Profile pages, connection graphs, feed layouts, messaging UI, job boards — I\'ll have a component library ready. I\'ll focus on the profile experience first since it\'s the core identity touchpoint.', avatar: 'designer', byline: 'designer' },
+      { role: 'dev', name: 'John Snow', text: 'Spinning up the backend and frontend scaffolds. Node services with PostgreSQL and some document stores for feed content. React frontend with TypeScript. I\'ll begin with user registration and feed — those unlock the rest of the flow.', avatar: 'dev', byline: 'dev' },
+      { role: 'devops', name: 'Arya', text: 'Setting up the infra pipeline. Docker images, K8s manifests, CI/CD per service, monitoring stack. Blue-green deploys with auto-rollback. I\'ll have the first environment ready before the first service needs deployment.', avatar: 'devops', byline: 'devops' },
+      { role: 'agent', name: 'Agent-X', text: 'All crew members are working in parallel. <b>Timeline:</b> Architecture in 2 days · Design system in 4 days · MVP services in 2 weeks · Pipeline in 3 days — all simultaneous. I\'ll coordinate and keep you updated. <span style="color:#888;">Ready to start?</span>', avatar: 'agent', byline: 'agent' },
+    ];
 
-    function selectCrew(role) {
-      const data = CREW_DATA[role];
-      if (!data) return;
+    (function() {
+      const body = document.getElementById('crewChatBody');
+      if (!body) return;
 
-      document.querySelectorAll('.crew-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector(`.crew-tab[data-crew="${role}"]`).classList.add('active');
+      function buildMessages() {
+        CREW_SCRIPT.forEach((msg, i) => {
+          const m = document.createElement('div');
+          m.className = 'crew-msg';
+          m.dataset.idx = i;
 
-      document.getElementById('crewDetailIcon').textContent = data.icon;
-      document.getElementById('crewDetailName').textContent = data.name;
-      document.getElementById('crewDetailTagline').textContent = data.tagline;
+          const a = document.createElement('div');
+          a.className = 'crew-avatar ' + msg.avatar;
+          a.textContent = msg.name.split(/\s/).map(w => w[0]).join('').slice(0, 2);
 
-      const container = document.getElementById('crewConversation');
-      container.innerHTML = '';
-      data.messages.forEach(msg => {
-        const div = document.createElement('div');
-        div.className = 'msg msg-' + msg.side;
-        const userClass = msg.side === 'right' ? ' user' : '';
-        div.innerHTML = `<div class="msg-bubble${userClass}">${msg.text}</div><div class="msg-time">${msg.time}</div>`;
-        container.appendChild(div);
-      });
-    }
+          const b = document.createElement('div');
+          b.className = 'crew-body';
 
-    // Select first crew member on load
-    selectCrew('engineer');
+          const bl = document.createElement('div');
+          bl.className = 'byline ' + msg.byline;
+          bl.textContent = msg.name;
+
+          const t = document.createElement('div');
+          t.className = 'text';
+          t.innerHTML = msg.text;
+
+          b.appendChild(bl);
+          b.appendChild(t);
+          m.appendChild(a);
+          m.appendChild(b);
+          body.appendChild(m);
+        });
+
+        // Typing indicator
+        const typing = document.createElement('div');
+        typing.className = 'crew-typing';
+        typing.id = 'crewTyping';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        body.appendChild(typing);
+      }
+
+      buildMessages();
+
+      // Animate messages on scroll
+      let msgIdx = 0;
+      const allMsgs = body.querySelectorAll('.crew-msg');
+      const typingEl = document.getElementById('crewTyping');
+
+      function showNext() {
+        if (msgIdx >= allMsgs.length) {
+          typingEl.classList.add('revealed');
+          return;
+        }
+        const msg = allMsgs[msgIdx];
+        msg.classList.add('revealed');
+        msgIdx++;
+
+        const delay = msgIdx === 1 ? 600 : 1200 + Math.random() * 800;
+        setTimeout(showNext, delay);
+      }
+
+      const section = document.getElementById('crew');
+      const obs = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          setTimeout(showNext, 600);
+          obs.disconnect();
+        }
+      }, { threshold: 0.3 });
+      if (section) obs.observe(section);
+    })();
 
     // ===== Terminal Demo — Coordinated Chat + Terminal =====
     (function() {
