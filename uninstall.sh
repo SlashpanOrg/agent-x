@@ -23,6 +23,37 @@ info()  { printf "${CYAN}▸${NC} %s\n" "$1"; }
 ok()    { printf "${GREEN}✓${NC} %s\n" "$1"; }
 warn()  { printf "${YELLOW}⚠${NC} %s\n" "$1"; }
 
+# ─── Shutdown ──────────────────────────────────────────────────────
+
+stop_running_processes() {
+  local found=false
+  local patterns=("agentx" "daemon.js" "web-api.*index.js")
+
+  for pattern in "${patterns[@]}"; do
+    local pids
+    pids=$(pgrep -f "$pattern" 2>/dev/null || true)
+    if [ -n "$pids" ]; then
+      found=true
+      for pid in $pids; do
+        # Skip our own process
+        [ "$pid" = "$$" ] && continue
+        kill "$pid" 2>/dev/null || true
+      done
+    fi
+  done
+
+  if [ "$found" = true ]; then
+    sleep 1
+    # Force kill anything still alive
+    for pattern in "${patterns[@]}"; do
+      pkill -9 -f "$pattern" 2>/dev/null || true
+    done
+    ok "Stopped all running Agent-X processes"
+  else
+    info "No running Agent-X processes found"
+  fi
+}
+
 # ─── Removal Functions ─────────────────────────────────────────────
 
 remove_installation() {
@@ -109,6 +140,9 @@ main() {
   else
     info "Initiating package removal (keeping user data)..."
   fi
+  printf "\n"
+
+  stop_running_processes
   printf "\n"
 
   remove_binary

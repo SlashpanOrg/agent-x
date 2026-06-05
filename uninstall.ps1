@@ -13,6 +13,36 @@ Write-Host ""
 Write-Host "  Agent-X Uninstaller for Windows" -ForegroundColor Cyan
 Write-Host ""
 
+# ─── Shutdown ──────────────────────────────────────────────────────
+
+function Stop-RunningProcesses {
+  $found = $false
+  $patterns = @("agentx", "daemon.js", "web-api.*index.js")
+
+  foreach ($pattern in $patterns) {
+    try {
+      $procs = Get-Process | Where-Object { $_.CommandLine -match $pattern -and $_.Id -ne $pid }
+      foreach ($proc in $procs) {
+        $proc.Kill()
+        $found = $true
+      }
+    } catch { }
+  }
+
+  if ($found) {
+    Start-Sleep -Seconds 1
+    # Force kill anything still alive
+    foreach ($pattern in $patterns) {
+      try {
+        Get-Process | Where-Object { $_.CommandLine -match $pattern -and $_.Id -ne $pid } | ForEach-Object { $_.Kill() }
+      } catch { }
+    }
+    Write-Host "  $([char]0x2713) Stopped all running Agent-X processes" -ForegroundColor Green
+  } else {
+    Write-Host "  $([char]0x25B8) No running Agent-X processes found" -ForegroundColor Cyan
+  }
+}
+
 # ─── Removal Functions ─────────────────────────────────────────────
 
 function Remove-Binary {
@@ -107,6 +137,9 @@ if ($mode -eq "full") {
 } else {
   Write-Host "  Initiating package removal (keeping user data)..." -ForegroundColor Cyan
 }
+Write-Host ""
+
+Stop-RunningProcesses
 Write-Host ""
 
 Remove-Binary
