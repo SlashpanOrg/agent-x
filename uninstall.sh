@@ -23,14 +23,12 @@ info()  { printf "${CYAN}▸${NC} %s\n" "$1"; }
 ok()    { printf "${GREEN}✓${NC} %s\n" "$1"; }
 warn()  { printf "${YELLOW}⚠${NC} %s\n" "$1"; }
 
-
-
-# ─── Removal ────────────────────────────────────────────────────────
+# ─── Removal Functions ─────────────────────────────────────────────
 
 remove_installation() {
   if [ -d "$INSTALL_DIR" ]; then
     rm -rf "$INSTALL_DIR"
-    ok "Decommissioned installation: $INSTALL_DIR"
+    ok "Removed installation: $INSTALL_DIR"
   else
     info "No installation found at $INSTALL_DIR (skipped)"
   fi
@@ -39,7 +37,7 @@ remove_installation() {
 remove_binary() {
   if [ -e "$BIN_DIR/agentx" ]; then
     rm -f "$BIN_DIR/agentx"
-    ok "Removed navigation beacon: $BIN_DIR/agentx"
+    ok "Removed binary: $BIN_DIR/agentx"
   else
     info "No binary found at $BIN_DIR/agentx (skipped)"
   fi
@@ -47,33 +45,19 @@ remove_binary() {
 
 remove_global_package() {
   if command -v npm >/dev/null 2>&1; then
-    npm uninstall -g @agentx/cli >/dev/null 2>&1 && ok "Scrubbed global npm package" || true
+    npm uninstall -g @agentx/cli >/dev/null 2>&1 && ok "Removed global npm package" || true
   fi
   if command -v pnpm >/dev/null 2>&1; then
-    pnpm remove -g @agentx/cli >/dev/null 2>&1 && ok "Scrubbed global pnpm package" || true
+    pnpm remove -g @agentx/cli >/dev/null 2>&1 && ok "Removed global pnpm package" || true
   fi
 }
 
-remove_data() {
+remove_all_data() {
   local removed=false
 
-  if [ -d "$CONFIG_DIR" ]; then
-    rm -rf "$CONFIG_DIR"
-    ok "Wiped mission config: $CONFIG_DIR"
-    removed=true
-  fi
-
-  if [ -d "$DATA_DIR" ]; then
-    rm -rf "$DATA_DIR"
-    ok "Wiped telemetry data: $DATA_DIR"
-    removed=true
-  fi
-
-  if [ -d "$CACHE_DIR" ]; then
-    rm -rf "$CACHE_DIR"
-    ok "Wiped cached telemetry: $CACHE_DIR"
-    removed=true
-  fi
+  [ -d "$CONFIG_DIR" ] && rm -rf "$CONFIG_DIR" && ok "Removed config: $CONFIG_DIR" && removed=true
+  [ -d "$DATA_DIR" ]   && rm -rf "$DATA_DIR"   && ok "Removed data: $DATA_DIR"   && removed=true
+  [ -d "$CACHE_DIR" ]  && rm -rf "$CACHE_DIR"  && ok "Removed cache: $CACHE_DIR"  && removed=true
 
   if [ "$removed" = false ]; then
     info "No user data found (skipped)"
@@ -88,7 +72,7 @@ clean_path_entries() {
       sed -i.bak '/# Agent-X/d' "$rc"
       sed -i.bak "\|${BIN_DIR}|d" "$rc"
       rm -f "${rc}.bak"
-      ok "Removed navigation waypoint from $rc"
+      ok "Removed PATH entry from $rc"
     fi
   done
 }
@@ -100,42 +84,53 @@ main() {
   printf "  ${DIM}Agent-X recall and scrub${NC}\n"
   printf "\n"
 
-  info "Initiating decommission sequence..."
+  MODE=""
+
+  if [ -t 0 ]; then
+    printf "  What would you like to do?\n"
+    printf "\n"
+    printf "    ${BOLD}1${NC}) Just uninstall Agent-X (keep config, data, credentials)\n"
+    printf "    ${BOLD}2${NC}) Full wipe — remove everything including config, credentials, and user data\n"
+    printf "\n"
+    printf "  Enter choice [1/2]: "
+    read -r choice
+    case "$choice" in
+      2|full|wipe) MODE="full" ;;
+      *) MODE="package" ;;
+    esac
+    printf "\n"
+  else
+    # Non-interactive — check AGENTX_UNINSTALL_MODE env var
+    MODE="${AGENTX_UNINSTALL_MODE:-package}"
+  fi
+
+  if [ "$MODE" = "full" ]; then
+    info "Initiating full wipe sequence..."
+  else
+    info "Initiating package removal (keeping user data)..."
+  fi
   printf "\n"
 
   remove_binary
   remove_installation
   remove_global_package
-  printf "\n"
-
-  if [ -d "$CONFIG_DIR" ] || [ -d "$DATA_DIR" ] || [ -d "$CACHE_DIR" ]; then
-    printf "  ${YELLOW}Orbital debris detected:${NC}\n"
-    [ -d "$CONFIG_DIR" ] && printf "    • Mission config:  $CONFIG_DIR\n"
-    [ -d "$DATA_DIR" ]   && printf "    • Telemetry data:  $DATA_DIR\n"
-    [ -d "$CACHE_DIR" ]  && printf "    • Cached telemetry: $CACHE_DIR\n"
-    printf "\n"
-
-    if [ -t 0 ]; then
-      printf "  Scrub orbital debris (sessions, config, memories)? [y/N] "
-      read -r answer
-      if [[ "$answer" =~ ^[Yy] ]]; then
-        remove_data
-      else
-        info "Orbital debris preserved"
-      fi
-    else
-      warn "Running non-interactively — preserving orbital debris"
-      info "To also scrub debris, run: rm -rf $CONFIG_DIR $DATA_DIR $CACHE_DIR"
-    fi
-  fi
-
-  printf "\n"
   clean_path_entries
 
   printf "\n"
-  printf "  ${BOLD}✧  DECOMMISSION COMPLETE  ✧${NC}\n"
-  printf "  ${DIM}Agent-X has left the building.${NC}\n"
+
+  if [ "$MODE" = "full" ]; then
+    info "Proceeding with data removal..."
+    remove_all_data
+  else
+    info "Preserving user data at:"
+    [ -d "$CONFIG_DIR" ] && printf "    • Config:  $CONFIG_DIR\n"
+    [ -d "$DATA_DIR" ]   && printf "    • Data:    $DATA_DIR\n"
+    [ -d "$CACHE_DIR" ]  && printf "    • Cache:   $CACHE_DIR\n"
+    [ ! -d "$CONFIG_DIR" ] && [ ! -d "$DATA_DIR" ] && [ ! -d "$CACHE_DIR" ] && printf "    (none found)\n"
+  fi
+
   printf "\n"
+  printf "  ${BOLD}✧  DECOMMISSION COMPLETE  ✧${NC}\n"
   printf "  ${DIM}Open a new terminal for PATH changes to take effect.${NC}\n"
   printf "  ${DIM}Safe travels, commander.${NC}\n"
   printf "\n"

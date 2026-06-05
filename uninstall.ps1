@@ -13,22 +13,24 @@ Write-Host ""
 Write-Host "  Agent-X Uninstaller for Windows" -ForegroundColor Cyan
 Write-Host ""
 
+# ─── Removal Functions ─────────────────────────────────────────────
+
 function Remove-Binary {
   $binPath = "$BinDir\agentx.cmd"
   if (Test-Path $binPath) {
     Remove-Item -Force $binPath
-    Write-Host "  ✓ Removed binary: $binPath" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed binary: $binPath" -ForegroundColor Green
   } else {
-    Write-Host "  ▸ No binary found at $binPath (skipped)" -ForegroundColor Cyan
+    Write-Host "  $([char]0x25B8) No binary found at $binPath (skipped)" -ForegroundColor Cyan
   }
 }
 
 function Remove-Installation {
   if (Test-Path $InstallDir) {
     Remove-Item -Recurse -Force $InstallDir
-    Write-Host "  ✓ Removed installation: $InstallDir" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed installation: $InstallDir" -ForegroundColor Green
   } else {
-    Write-Host "  ▸ No installation found at $InstallDir (skipped)" -ForegroundColor Cyan
+    Write-Host "  $([char]0x25B8) No installation found at $InstallDir (skipped)" -ForegroundColor Cyan
   }
 }
 
@@ -36,38 +38,36 @@ function Remove-GlobalPackage {
   $npm = Get-Command npm -ErrorAction SilentlyContinue
   if ($npm) {
     npm uninstall -g @agentx/cli 2>$null | Out-Null
-    if ($?) { Write-Host "  ✓ Removed global npm package" -ForegroundColor Green }
+    if ($?) { Write-Host "  $([char]0x2713) Removed global npm package" -ForegroundColor Green }
   }
   $pnpm = Get-Command pnpm -ErrorAction SilentlyContinue
   if ($pnpm) {
     pnpm remove -g @agentx/cli 2>$null | Out-Null
-    if ($?) { Write-Host "  ✓ Removed global pnpm package" -ForegroundColor Green }
+    if ($?) { Write-Host "  $([char]0x2713) Removed global pnpm package" -ForegroundColor Green }
   }
 }
 
-function Remove-Data {
+function Remove-AllData {
   $removed = $false
 
   if (Test-Path $ConfigDir) {
     Remove-Item -Recurse -Force $ConfigDir
-    Write-Host "  ✓ Removed config: $ConfigDir" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed config: $ConfigDir" -ForegroundColor Green
     $removed = $true
   }
-
   if (Test-Path $DataDir) {
     Remove-Item -Recurse -Force $DataDir
-    Write-Host "  ✓ Removed data: $DataDir" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed data: $DataDir" -ForegroundColor Green
     $removed = $true
   }
-
   if (Test-Path $CacheDir) {
     Remove-Item -Recurse -Force $CacheDir
-    Write-Host "  ✓ Removed cache: $CacheDir" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed cache: $CacheDir" -ForegroundColor Green
     $removed = $true
   }
 
   if (-not $removed) {
-    Write-Host "  ▸ No user data found (skipped)" -ForegroundColor Cyan
+    Write-Host "  $([char]0x25B8) No user data found (skipped)" -ForegroundColor Cyan
   }
 }
 
@@ -76,45 +76,58 @@ function Remove-FromPath {
   $newPath = ($userPath -split ";" | Where-Object { $_ -ne $BinDir }) -join ";"
   if ($newPath -ne $userPath) {
     [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-    Write-Host "  ✓ Removed $BinDir from PATH" -ForegroundColor Green
+    Write-Host "  $([char]0x2713) Removed $BinDir from PATH" -ForegroundColor Green
   } else {
-    Write-Host "  ▸ $BinDir not found in PATH (skipped)" -ForegroundColor Cyan
+    Write-Host "  $([char]0x25B8) $BinDir not found in PATH (skipped)" -ForegroundColor Cyan
   }
 }
 
-Write-Host "  Initiating decommission sequence..." -ForegroundColor Cyan
+# ─── Main ───────────────────────────────────────────────────────────
+
+$mode = "package"
+
+if ($Host.UI.RawUI) {
+  Write-Host "  What would you like to do?" -ForegroundColor White
+  Write-Host ""
+  Write-Host "    1) Just uninstall Agent-X (keep config, data, credentials)" -ForegroundColor White
+  Write-Host "    2) Full wipe - remove everything including config, credentials, and user data" -ForegroundColor White
+  Write-Host ""
+  $choice = Read-Host "  Enter choice [1/2]"
+  if ($choice -match "^2|full|wipe$") {
+    $mode = "full"
+  }
+  Write-Host ""
+} else {
+  # Non-interactive — check env var
+  $mode = if ($env:AGENTX_UNINSTALL_MODE) { $env:AGENTX_UNINSTALL_MODE } else { "package" }
+}
+
+if ($mode -eq "full") {
+  Write-Host "  Initiating full wipe sequence..." -ForegroundColor Cyan
+} else {
+  Write-Host "  Initiating package removal (keeping user data)..." -ForegroundColor Cyan
+}
 Write-Host ""
 
 Remove-Binary
 Remove-Installation
 Remove-GlobalPackage
-Write-Host ""
-
-if ((Test-Path $ConfigDir) -or (Test-Path $DataDir) -or (Test-Path $CacheDir)) {
-  Write-Host "  Orbital debris detected:" -ForegroundColor Yellow
-  if (Test-Path $ConfigDir) { Write-Host "    • Config:  $ConfigDir" }
-  if (Test-Path $DataDir)   { Write-Host "    • Data:    $DataDir" }
-  if (Test-Path $CacheDir)  { Write-Host "    • Cache:   $CacheDir" }
-  Write-Host ""
-  if ($Host.UI.RawUI) {
-    $answer = Read-Host "  Scrub orbital debris (sessions, config, memories)? [y/N]"
-    if ($answer -match "^[Yy]") {
-      Remove-Data
-    } else {
-      Write-Host "  ▸ Orbital debris preserved" -ForegroundColor Cyan
-    }
-  } else {
-    Write-Host "  ⚠ Running non-interactively — preserving orbital debris" -ForegroundColor Yellow
-    Write-Host "  To also scrub debris, run: Remove-Item -Recurse -Force `"$ConfigDir`", `"$DataDir`", `"$CacheDir`"" -ForegroundColor Cyan
-  }
-}
-
-Write-Host ""
 Remove-FromPath
 Write-Host ""
 
-Write-Host "  ** DECOMMISSION COMPLETE **" -ForegroundColor Yellow
-Write-Host "  Agent-X has left the building." -ForegroundColor DarkGray
+if ($mode -eq "full") {
+  Write-Host "  Proceeding with data removal..." -ForegroundColor Cyan
+  Remove-AllData
+} else {
+  Write-Host "  Preserving user data at:" -ForegroundColor Cyan
+  $found = $false
+  if (Test-Path $ConfigDir) { Write-Host "    - Config:  $ConfigDir"; $found = $true }
+  if (Test-Path $DataDir)   { Write-Host "    - Data:    $DataDir"; $found = $true }
+  if (Test-Path $CacheDir)  { Write-Host "    - Cache:   $CacheDir"; $found = $true }
+  if (-not $found) { Write-Host "    (none found)" }
+}
+
 Write-Host ""
+Write-Host "  ** DECOMMISSION COMPLETE **" -ForegroundColor Yellow
 Write-Host "  Open a new terminal for PATH changes to take effect." -ForegroundColor DarkGray
 Write-Host ""
