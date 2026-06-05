@@ -62,7 +62,7 @@ PROGRESS_PID=""
 start_progress() {
   local msg="$1"
   (
-    local chars=('▰' '▰' '▰' '▰' '▰' '▱' '▱' '▱' '▱' '▱')
+    local chars=('▱' '▱' '▱' '▱' '▱' '▰' '▰' '▰' '▰' '▰')
     local i=0
     while true; do
       local bar=""
