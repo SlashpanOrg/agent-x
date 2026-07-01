@@ -1198,6 +1198,31 @@
       border-bottom-color: #fff;
     }
 
+    /* ===== Arch Sub-Tabs (macOS only) ===== */
+    .arch-subtabs {
+      display: none;
+      gap: 4px;
+      padding: 6px 12px;
+      background: #080808;
+      border-bottom: 1px solid #1a1a1a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .arch-subtabs.visible { display: flex; }
+    .arch-subtab {
+      padding: 4px 10px;
+      cursor: pointer;
+      color: #555;
+      background: transparent;
+      border: 1px solid #222;
+      border-radius: 3px;
+      transition: all .2s ease;
+    }
+    .arch-subtab:hover { color: #888; border-color: #333; }
+    .arch-subtab.active { color: #fff; border-color: #fff; }
+
     .copy-btn {
       display: inline-flex;
       align-items: center;
@@ -2976,6 +3001,10 @@
             <button class="os-tab" data-os="linux" onclick="switchOS('linux')">Linux</button>
             <button class="os-tab" data-os="windows" onclick="switchOS('windows')">Windows</button>
           </div>
+          <div class="arch-subtabs" id="archSubtabs">
+            <button class="arch-subtab active" data-arch="arm64" onclick="switchArch('arm64', this)">Apple Silicon</button>
+            <button class="arch-subtab" data-arch="x64" onclick="switchArch('x64', this)">Intel</button>
+          </div>
           <div class="terminal-body">
             <span class="output">&#x25B6; Downloading Agent-X Desktop...</span><br />
             <span class="output">&#x25B6; Verifying package integrity...</span><br />
@@ -2997,7 +3026,7 @@
             Download, install, launch. No account. No cloud. Your data stays on your machine — always.
           </p>
           <p>
-            macOS (Apple Silicon), Windows, and Linux — AppImage, .deb, and NSIS installer. System tray, <strong style="color:#ccc;">Alt+A</strong> global hotkey, bundled Python runtime, and auto-update from GitHub releases.
+            macOS (Apple Silicon &amp; Intel), Windows, and Linux — AppImage, .deb, and NSIS installer. System tray, <strong style="color:#ccc;">Alt+A</strong> global hotkey, bundled Python runtime, and auto-update from GitHub releases.
           </p>
           <p>
             Bring your own API key for any LLM provider, or run a local model with Ollama or LM Studio — zero subscription for the platform itself.
@@ -4926,10 +4955,14 @@
 
     // ===== OS Detection & Tab Switching =====
     const OS_CONFIG = {
-      macos: { label: 'macOS' },
-      linux: { label: 'Linux' },
-      windows: { label: 'Windows' },
+      macos: { label: 'macOS', arch: 'arm64' },  // default to Apple Silicon
+      linux: { label: 'Linux', arch: 'x64' },
+      windows: { label: 'Windows', arch: 'x64' },
     };
+
+    // Track current selection
+    var currentOS = 'macos';
+    var currentArch = 'arm64';
 
     function detectOS() {
       const p = (navigator.platform || '').toLowerCase();
@@ -4942,12 +4975,90 @@
     function switchOS(os) {
       const config = OS_CONFIG[os];
       if (!config) return;
+      currentOS = os;
 
       document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
       document.querySelector(`.os-tab[data-os="${os}"]`).classList.add('active');
 
-      document.getElementById('detectedOS').textContent = config.label;
-      document.getElementById('downloadOSLabel').textContent = config.label;
+      // Show arch sub-tabs only for macOS
+      var archBar = document.getElementById('archSubtabs');
+      if (archBar) {
+        if (os === 'macos') {
+          archBar.classList.add('visible');
+        } else {
+          archBar.classList.remove('visible');
+        }
+      }
+
+      // Update labels
+      var label = config.label;
+      if (os === 'macos') {
+        label = currentArch === 'arm64' ? 'macOS (Apple Silicon)' : 'macOS (Intel)';
+      }
+      document.getElementById('detectedOS').textContent = label;
+      document.getElementById('downloadOSLabel').textContent = label;
+
+      // Re-fetch and update the download button for this OS+arch
+      updateDownloadButton();
+    }
+
+    function switchArch(arch, btnEl) {
+      currentArch = arch;
+      // Update active state
+      document.querySelectorAll('.arch-subtab').forEach(t => t.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      // Update label
+      if (currentOS === 'macos') {
+        var label = arch === 'arm64' ? 'macOS (Apple Silicon)' : 'macOS (Intel)';
+        document.getElementById('detectedOS').textContent = label;
+        document.getElementById('downloadOSLabel').textContent = label;
+      }
+      updateDownloadButton();
+    }
+
+    // Fetch latest release assets and update the hero download button
+    var _releaseAssets = null;
+    function updateDownloadButton() {
+      var btn = document.getElementById('downloadBtn');
+      if (!btn || !_releaseAssets) return;
+
+      var os = currentOS;
+      var arch = currentArch;
+
+      function matchAsset(name) {
+        var n = name.toLowerCase();
+        if (os === 'macos') {
+          if (arch === 'arm64') return n.includes('arm64') && n.endsWith('.dmg');
+          return n.includes('x64') && n.endsWith('.dmg');
+        }
+        if (os === 'windows') {
+          return (n.includes('setup') || n.includes('-nsis')) && n.endsWith('.exe');
+        }
+        // Linux — prefer AppImage
+        return n.endsWith('.appimage');
+      }
+
+      function matchFallback(name) {
+        var n = name.toLowerCase();
+        if (os === 'macos') {
+          // Fall back to any DMG (prefer the selected arch, then any)
+          if (arch === 'arm64' && n.includes('arm64') && n.endsWith('.dmg')) return true;
+          if (n.includes('x64') && n.endsWith('.dmg')) return true;
+          return n.endsWith('.dmg');
+        }
+        if (os === 'windows') return n.endsWith('.exe');
+        return n.endsWith('.appimage') || n.endsWith('.deb');
+      }
+
+      var matched = _releaseAssets.find(function(a) { return matchAsset(a.name); })
+                 || _releaseAssets.find(function(a) { return matchFallback(a.name); });
+
+      if (matched) {
+        btn.href = matched.browser_download_url;
+        var label = os === 'macos' ? 'Download for macOS' :
+                    os === 'windows' ? 'Download for Windows' : 'Download for Linux';
+        btn.innerHTML = '<span>&#x2193;</span> ' + label;
+      }
     }
 
     // Auto-detect on load
@@ -5402,33 +5513,14 @@
       });
     })();
 
-    // ===== Download Button — fetch latest release and match OS =====
+    // ===== Download Button — fetch latest release assets once, then match on OS+arch change =====
     (function() {
-      var btn = document.getElementById('downloadBtn');
-      if (!btn) return;
-
-      var ua = navigator.userAgent || navigator.platform || '';
-
-      function matchOS(asset) {
-        var n = asset.name.toLowerCase();
-        if (/Mac|iPhone|iPad|iPod/.test(ua)) return n.endsWith('.dmg');
-        if (/Win/.test(ua)) return n.includes('setup') && n.endsWith('.exe');
-        return n.endsWith('.appimage');
-      }
-
-      function setButton(asset) {
-        btn.href = asset.browser_download_url;
-        var label = /Mac|iPhone|iPad|iPod/.test(ua) ? 'Download for macOS' :
-                    /Win/.test(ua) ? 'Download for Windows' : 'Download for Linux';
-        btn.innerHTML = '<span>&#x2193;</span> ' + label;
-      }
-
       fetch('https://api.github.com/repos/SlashpanOrg/agent-x/releases/latest')
         .then(function(r) { return r.json(); })
         .then(function(release) {
           if (!release || !release.assets) return;
-          var matched = release.assets.find(matchOS);
-          if (matched) setButton(matched);
+          _releaseAssets = release.assets;
+          updateDownloadButton();
         })
         .catch(function() {});
     })();
