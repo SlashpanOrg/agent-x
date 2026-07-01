@@ -4955,14 +4955,14 @@
 
     // ===== OS Detection & Tab Switching =====
     const OS_CONFIG = {
-      macos: { label: 'macOS', arch: 'arm64' },  // default to Apple Silicon
-      linux: { label: 'Linux', arch: 'x64' },
-      windows: { label: 'Windows', arch: 'x64' },
+      macos: { label: 'macOS' },
+      linux: { label: 'Linux' },
+      windows: { label: 'Windows' },
     };
 
     // Track current selection
     var currentOS = 'macos';
-    var currentArch = 'arm64';
+    var currentArch = 'x64';  // safe default — x64 runs on Intel natively AND Apple Silicon via Rosetta
 
     function detectOS() {
       const p = (navigator.platform || '').toLowerCase();
@@ -4970,6 +4970,37 @@
       if (p.includes('mac') || ua.includes('mac')) return 'macos';
       if (p.includes('win') || ua.includes('win')) return 'windows';
       return 'linux';
+    }
+
+    /**
+     * Detect Mac CPU architecture. Browsers don't expose this reliably:
+     * - Safari: navigator.platform is "MacIntel" on both Apple Silicon and Intel (no way to tell)
+     * - Chrome/Edge: navigator.userAgentData.getHighEntropyValues(['architecture']) returns
+     *   'arm' on Apple Silicon — but it's async
+     * - Firefox: no architecture API
+     *
+     * Strategy:
+     * 1. Try navigator.userAgentData (Chromium-based browsers, async)
+     * 2. Fall back to x64 (safe — runs everywhere via Rosetta on Apple Silicon)
+     * 3. User can manually switch to arm64 via the sub-tab if they know they're on Apple Silicon
+     */
+    function detectMacArch(callback) {
+      // Quick check: if userAgentData is available, use the async API
+      if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        navigator.userAgentData.getHighEntropyValues(['architecture', 'bitness'])
+          .then(function(hev) {
+            if (hev && hev.architecture) {
+              // 'arm' → Apple Silicon, anything else (x86, etc.) → Intel
+              callback(hev.architecture === 'arm' ? 'arm64' : 'x64');
+            } else {
+              callback('x64');  // safe fallback
+            }
+          })
+          .catch(function() { callback('x64'); });
+        return;
+      }
+      // No userAgentData — default to x64 (safe, runs everywhere on Mac)
+      callback('x64');
     }
 
     function switchOS(os) {
@@ -4991,15 +5022,23 @@
       }
 
       // Update labels
+      updateOSLabel();
+      // Re-match the download button for this OS+arch
+      updateDownloadButton();
+    }
+
+    function updateOSLabel() {
+      var os = currentOS;
+      var config = OS_CONFIG[os];
+      if (!config) return;
       var label = config.label;
       if (os === 'macos') {
         label = currentArch === 'arm64' ? 'macOS (Apple Silicon)' : 'macOS (Intel)';
       }
-      document.getElementById('detectedOS').textContent = label;
-      document.getElementById('downloadOSLabel').textContent = label;
-
-      // Re-fetch and update the download button for this OS+arch
-      updateDownloadButton();
+      var el1 = document.getElementById('detectedOS');
+      var el2 = document.getElementById('downloadOSLabel');
+      if (el1) el1.textContent = label;
+      if (el2) el2.textContent = label;
     }
 
     function switchArch(arch, btnEl) {
@@ -5008,11 +5047,7 @@
       document.querySelectorAll('.arch-subtab').forEach(t => t.classList.remove('active'));
       if (btnEl) btnEl.classList.add('active');
       // Update label
-      if (currentOS === 'macos') {
-        var label = arch === 'arm64' ? 'macOS (Apple Silicon)' : 'macOS (Intel)';
-        document.getElementById('detectedOS').textContent = label;
-        document.getElementById('downloadOSLabel').textContent = label;
-      }
+      updateOSLabel();
       updateDownloadButton();
     }
 
@@ -5062,7 +5097,22 @@
     }
 
     // Auto-detect on load
-    switchOS(detectOS());
+    (function() {
+      var os = detectOS();
+      if (os === 'macos') {
+        // Async arch detection for Mac — defaults to x64 (safe) if detection fails
+        detectMacArch(function(arch) {
+          currentArch = arch;
+          // Update the arch sub-tab active state to match detected arch
+          document.querySelectorAll('.arch-subtab').forEach(function(t) {
+            t.classList.toggle('active', t.getAttribute('data-arch') === arch);
+          });
+          switchOS('macos');
+        });
+      } else {
+        switchOS(os);
+      }
+    })();
 
     // ===== GitHub Stars & Version =====
     (function() {
